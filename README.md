@@ -41,18 +41,18 @@ Shell pipelines are an essential piece of interconnected products in the AI sphe
  * Hackable
  * Linux and Mac compatible. Windows is coming soon.
  * Beautiful [Charm](https://charm.sh/ "Charm") TUI interface written in Go.
- * Terminal editor and Markdown reader. 
- * Ask gpt and gtts answare to speaker (text2speaker) -> t2sk
- * Ask gpt and gtts answare to audio (text2audio) -> t2a
+ * Terminal editor and Markdown reader.
+ * Ask gpt and gtts answer to speaker (text2speaker) -> t2sk
+ * Ask gpt and gtts answer to audio (text2audio) -> t2a
  * Ask gpt and produce specifically code (code2text) -> c2t
  * Take audio and produce text transcript (audio2text) -> a2t
  * Take audio and produce subtitles transcript (audio2subtitles) -> a2s
- * Promt gpt and prduce asware to text (prompt2text) -> p2t
- * Take text and translate into text (text2text) -> t2tr 
- * Take audio and enance quality into audio (audio2audio) -> a2a
- * Take audio & text transcript and produce sutitles (audio+text2subtitles) -> at2s 
- * Take text and stablediffusion produce image (text2image) -> t2i
- * Coincise pipelines (inputs2output)
+ * Prompt gpt and produce text (prompt2text) -> p2t
+ * Take text and translate into text (text2text) -> t2tr
+ * Take audio and enhance quality into audio (audio2audio) -> a2a
+ * Take audio & text transcript and produce subtitles (audio+text2subtitles) -> at2s
+ * Take text and stable diffusion produce image (text2image) -> t2i
+ * Concise pipelines (inputs2output)
  * CPU focus on performance
  * Documented (very soon)
  * Hackable again!
