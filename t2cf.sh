@@ -1,12 +1,13 @@
+# Small but handy functions. For Personal use only.
+# Use it at your own risk!
+# Author: Gabriele Risso  License: Apache 2.0
+
+
 lang=${lang:-$(echo ${LANG:0:2})};
 
 filter=filter.rnn && wget -qO $filter https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn
 
 session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
-
-export OPENAI_API_KEY="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"
-
-
 
 audiow="/dev/shm/audiow_$session.mp3"
 voicew="/dev/shm/voicew_$session.mp3"
