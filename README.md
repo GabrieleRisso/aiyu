@@ -58,8 +58,8 @@ Shell pipelines are an essential piece of interconnected products in the AI sphe
  * Documented (very soon)
  * Hackable again!
 
- <p align="left"> <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FGabrieleRisso%2Fitaflix&count_bg=%234D4244&title_bg=%23EA2424&icon_color=%233E3636&title=aiyu+&edge_flat=false"/></a> </p>
-5
+ <p align="left"> <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FGabrieleRisso%2Faiyu&count_bg=%234D4244&title_bg=%23EA2424&icon_color=%233E3636&title=aiyu+&edge_flat=false"/></a> </p>
+
 
 
 ## In the terminal:
