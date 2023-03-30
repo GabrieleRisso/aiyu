@@ -1,7 +1,6 @@
 
 lang=${lang:-$(echo ${LANG:0:2})};
 
-
 session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
 
 export OPENAI_API_KEY="   -^_^-   "
@@ -23,15 +22,15 @@ input=""
 output=""
 tmp=""
 
+#gui:
 #-s points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using Docker to interact with sgpt..." --\
- #--show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" 
- #foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1"
+#--show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" 
+#foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1"
 #--foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1
 
-#ffmpeg
+#ffmpeg:
 filter=filter.rnn && wget -qO $filter https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn
-advanced-audiot="atempo=1.4,dialoguenhance,arnndn=m=$filter,volume=1.3"
-COLUMNS
+#advanced-audiot="atempo=1.4,dialoguenhance,arnndn=m=$filter,volume=1.3"
 
 if ! type t2a 2>/dev/null 1>&2;
 then
