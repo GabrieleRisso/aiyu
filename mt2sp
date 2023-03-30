@@ -1,3 +1,10 @@
+# Small but handy functions. For Personal use only.
+# Use it at your own risk!
+# Author: Gabriele Risso  License: Apache 2.0
+
+#not working 
+
+
 
 lang=${lang:-$(echo ${LANG:0:2})};
 
