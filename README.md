@@ -1,4 +1,4 @@
-## Most powerful shell functions for AI
+# Most powerful shell functions for AI
 
 **Open.ai** Gpt-3.5turbo text generation meets **Google** gTTS and **Mozzilla** TTS audio generation. Featuers improved audio quality using ffmpeg RNN noise supression filter and subtitle timestamp accuracy using **Aeneas** forced alignment.
 Fast **Whisper** ctranslate2 transcript generation, Translate-shell text to text translation, **Stable Diffusion** text to image and much more.
@@ -19,7 +19,6 @@ sk -> speaker
 ```
 </details>
 
-
 |    	| c    	| t    	| a    	| s    	|  tr  	|   	|
 |----	|------	|------	|------	|------	|------	|---	|
 | c  	| c2c  	| c2t  	| c2a  	|  /   	| c2tr 	|   	|
@@ -30,7 +29,7 @@ sk -> speaker
 
 With some algebra we can cover most of those.
 
-### What is it:
+## What is it:
 
 This repository aims to fill the momentary void of usable interconnect products in the AI sphere by providing a set of powerful functions and resources for creating interconnected, AI-powered products. 
 There is currently a lack of cohesive, integrated systems that allow these technologies to work together seamlessly. That's where **aiyu** comes in.
@@ -58,25 +57,27 @@ Shell pipelines are an essential piece of interconnected products in the AI sphe
  * Documented (very soon)
  * Hackable again!
 
-## In  terminal:
+## In the terminal:
 
-#### download directory and enter it:
+##### download directory and enter it:
 ```
 git clone https://github.com/GabrieleRisso/aiyu.git 
 cd /aiyu/
 ```
-#### set the key to global scope: 
+##### set the key to global scope: 
 ```
-$ export OPENAI_API_KEY="your key string here"
+export OPENAI_API_KEY="your key string here"
 ```
-#### load a function:
+##### load a function:
 ```
-$ . t2s
+. t2s
 ```
-#### use it like this:
+##### use it like this:
 ```
-$ t2a "Who is Lain? and what is a this serial exeriments story all about?"
+t2a "Who is Lain? and what is a this serial exeriments story all about?"
 ```
+![alt text](https://github.com/gabrielerisso/aiyu/edit/main/img/t2a.png?raw=true)
+
 
 ## Good to know:
 
@@ -84,7 +85,7 @@ Dependancies are prompted if missing and a link to install them is provided.
 Functions mostly leverages **Gum**, **Python**, **Docker**.
 Memory usage statistics will be out soon.
 
-# Tutorial for functions:
+## Tutorial for functions:
 [wiki](https://github.com/GabrieleRisso/aiyu/edit/main/wiki.md "Aiyu Wiki")
 
 
@@ -96,7 +97,6 @@ Memory usage statistics will be out soon.
  * wiki documentation 
  * compose functions to make new ones
  * suggestion are welcome!
-
 
 
 ## Copyright
