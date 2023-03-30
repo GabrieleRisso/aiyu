@@ -1,0 +1,116 @@
+		    if ! type o-dtrans 2>/dev/null 1>&2;
+            then
+		        o-dtrans ()
+                {
+					
+				 local input="$2";
+                 local newest_file="";    #=$(stat -c '%Y %n' /dev/shm/*.mp3 | sort -nr | head -n1 | cut -d' ' -f2);
+                 local txt_file=$(ls -t /dev/shm/*.txt | head -1) ;  # find newest *.mp3 file
+                 local srt_file=$(ls -t /dev/shm/*.srt | head -1);   # find newest *.xyz file
+                               
+                 if [[ $(stat -c %Y "$txt_file") -gt $(stat -c %Y "$srt_file") ]]; then
+                       newest_file="$txt_file";
+                 else
+                       newest_file="$srt_file";
+                 fi
+                                				
+				
+				local output="$tradg"; 
+
+                #langfrom="$3"
+				langto="$1"
+				
+                langto=${langto:-$(echo "en")};
+				langfrom=${langfrom:-$(echo "auto")}; #sould autodetect language
+				#time=${time:-$(echo "5000")}; #timeout interval (default: 5000)
+				char=$(cat $input | wc -m) #chars count
+			    
+				if [ -z "$input" ];
+                then
+                    echo "No input" >&2;
+                    return 1;
+                fi
+    		    echo "using deepl for translation generation" >&2;
+				
+				gum style  "input text: $input" "language from: $langfrom" "output: $output" "language to: $langto" "SESSION: $session" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";
+                
+                gum spin -s points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using deepl for translation generation..." --\
+				cat $input | tr -d '[:cntrl:]' | deepl -s --to "$langto" | tr -d '[:cntrl:]' > $output   #same as: deepl -f $input .
+				
+				echo "ok 1"
+				gum confirm --negative="no" --affirmative="yes, let's read!" "open pager to read translation?" --timeout=15s --selected.foreground="0" --unselected.foreground="44" --selected.italic --unselected.italic --selected.background="50" --prompt.italic --prompt.margin="0 0 0 $(($COLUMNS -29))" \
+                && gum pager --soft-wrap --border-foreground="86" --help.foreground="200" --show-line-numbers < $output; 
+				
+				echo "[OK] deepl text to translation done."; >&2;
+				echo "[=] text used to create voice archived at: $input " >&2;
+				echo "[+] translated text saved at: $output "; >&2;
+		        }
+		    else
+            echo "o-dtrans is set on the system.To use it: \"o-dtrans text.txt trans.txt \" " >&2;
+            fi
+        fi
+		
+		if ! command -v docker --version 2>/dev/null 1>&2;
+		then
+            echo "trad is not installed on your system. https://github.com/soimort/translate-shell " >&2;
+            echo "o-ttrans is disabled" >&2;
+        else
+		    if ! type o-ttrans 2>/dev/null 1>&2;
+            then
+		        o-ttrans ()
+                {
+					
+				         local input="$2";
+                 local newest_file="";    #=$(stat -c '%Y %n' /dev/shm/*.mp3 | sort -nr | head -n1 | cut -d' ' -f2);
+                 local txt_file=$(ls -t /dev/shm/*.txt | head -1) ;  # find newest *.mp3 file
+                 local srt_file=$(ls -t /dev/shm/*.srt | head -1);   # find newest *.xyz file
+                               
+                 if [[ $(stat -c %Y "$txt_file") -gt $(stat -c %Y "$srt_file") ]]; then
+                       newest_file="$txt_file";
+                 else
+                       newest_file="$srt_file";
+                 fi
+                                
+               
+				echo '{{ Bold "[!] most recent file --> '$newest_file'" }}' | gum format -t template >&2;
+				
+                [ -f $newest_file ] && local input=${input:-$(echo $newest_file)} || local input=${input:-$(echo $(gum file $PWD))};				
+				
+				local output="$tradg"; 
+				
+
+				local langto="$1"
+				
+                local langto=${langto:-$(echo "en")};
+				local langfrom=${langfrom:-$(echo "auto")}; #sould autodetect language
+			
+			    
+				if [ -z "$input" ];
+                then
+                    echo "No input" >&2;
+                    return 1;
+                fi
+				
+				gum style  "input text: $input" "language from: $langfrom" "output: $output" "language to: $langto" "SESSION: $session" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";
+                				
+				local intrad=$(<"$input");
+						
+				gum spin --spinner points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using trad for translation generation..." -- sleep 2				
+				docker run --rm -it soimort/translate-shell -shell -brief -w 10 :"$langto" "$intrad" | tail -n +3  > $output;  
+				
+				gum confirm --negative="no" --affirmative="yes, let's read!" "open pager to read translation?" --timeout=15s --selected.foreground="0" --unselected.foreground="44" --selected.italic --unselected.italic --selected.background="50" --prompt.italic --prompt.margin="0 0 0 $(($COLUMNS -29))" \
+                && gum pager --soft-wrap --border-foreground="86" --help.foreground="200" --show-line-numbers < $output; 
+				
+				echo '{{ Bold "[+] translation OK" }}' | gum format -t template >&2;
+		        }
+		    else
+            echo "o-ttrans is set on the system.To use it: \"o-ttrans lang file.txt \" " >&2;
+            fi
+        fi
+
+		o-ttrans "$1" "$2";
+		#o-dtrans "$1" "$2";
+	}
+else
+    echo '{{ Bold "t2tr is set on the system" }}' | gum format -t template >&2;
+fi
