@@ -39,6 +39,7 @@ Shell pipelines are an essential piece of interconnected products in the AI sphe
 ## Features:
 
  * Hackable
+ * it support most languages
  * Linux and Mac compatible. Windows is coming soon.
  * Beautiful [Charm](https://charm.sh/ "Charm") TUI interface written in Go.
  * Terminal editor and Markdown reader.
@@ -80,26 +81,27 @@ t2a "Who is Lain? and what is a this serial exepriments story all about?"
 ![alt text](https://github.com/gabrielerisso/aiyu/blob/main/t2a.jpg?raw=true)
 
 
-## Good to know:
-
 Dependancies are prompted if missing and a link to install them is provided.
 Functions mostly leverages **Gum**, **Python**, **Docker**.
 Memory usage statistics will be out soon.
 
-## Tutorial for functions:
+### Tutorial for functions:
 [wiki](https://github.com/GabrieleRisso/aiyu/edit/main/wiki.md "Aiyu Wiki")
 
 
-# I really need your collaboartion to make **aiyu** awsome!
+### I need your collaboartion to make **aiyu** awsome!
  
- * .env with all vars 
+ * .env global
+ * best for voice
  * code compression
+ * code compilation
+ * 
  * code revision
  * wiki documentation 
  * compose functions to make new ones
  * suggestions are desired!
 
 
-## Copyright
+### Copyright
 
 Copyright © 2023 Gabriele Risso. 
