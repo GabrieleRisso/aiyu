@@ -32,7 +32,7 @@ With some algebra we can cover most of those.
 ## What is it:
 
 This repository aims to fill the momentary void of usable interconnect products in the AI sphere by providing a set of powerful functions and resources for creating interconnected, AI-powered products. 
-There is currently a lack of cohesive, integrated systems that allow these technologies to work together seamlessly. That's where **aiyu** comes in.
+There is currently a lack of cohesive integrated systems that allow these technologies to work together seamlessly. That's why **aiyu** comes in.
 
 Shell pipelines are an essential piece of interconnected products in the AI sphere due to their simplicity, power, and hopefully well-documented nature. Aiyu pipelines allow for quick and easy processing of data, enabling AI systems to ingest, manipulate, and transform large amounts of data in real-time. 
 
@@ -57,6 +57,10 @@ Shell pipelines are an essential piece of interconnected products in the AI sphe
  * CPU focus on performance
  * Documented (very soon)
  * Hackable again!
+
+ <p align="left"> <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FGabrieleRisso%2Fitaflix&count_bg=%234D4244&title_bg=%23EA2424&icon=netflix.svg&icon_color=%233E3636&title=aiyu+-+views&edge_flat=false"/></a> </p>
+5
+
 
 ## In the terminal:
 
@@ -92,10 +96,8 @@ Memory usage statistics will be out soon.
 ### I need your collaboartion to make **aiyu** awsome!
  
  * .env global
- * best for voice
+ * per-command tuning
  * code compression
- * code compilation
- * 
  * code revision
  * wiki documentation 
  * compose functions to make new ones
