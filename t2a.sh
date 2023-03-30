@@ -4,7 +4,7 @@ lang=${lang:-$(echo ${LANG:0:2})};
 
 session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
 
-
+export OPENAI_API_KEY="   -^_^-   "
 
 
 audiow="/dev/shm/audiow_$session.mp3"
@@ -76,7 +76,7 @@ then
 
 				#-------------------------------------x
                 gum spin -s points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using Docker to interact with sgpt..." --\
-                docker run --rm --env OPENAI_API_KEY -v gpt-cache:/tmp/shell_gpt ghcr.io/ther1d/shell_gpt --no-animation --chat "$session" "$input" > "$textg";
+                docker run --rm --env  -v gpt-cache:/tmp/shell_gpt ghcr.io/ther1d/shell_gpt --no-animation --chat "$session" "$input" > "$textg";
 				
 				
 				
@@ -176,4 +176,3 @@ then
 else
     echo '{{ Bold "t2a is set on the system" }}' | gum format -t template >&2;
 fi
-e
