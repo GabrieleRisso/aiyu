@@ -1,4 +1,4 @@
-# Shell functions for AI
+## Shell functions for AI
 
 **Open.ai** Gpt-3.5turbo text generation meets **Google** gTTS and **Mozzilla** TTS audio generation. Featuers improved audio quality using ffmpeg RNN noise supression filter and subtitle timestamp accuracy using **Aeneas** forced alignment.
 Fast **Whisper** ctranslate2 transcript generation, Translate-shell text to text translation, **Stable Diffusion** text to image and much more.
