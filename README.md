@@ -62,7 +62,7 @@ Shell pipelines are an essential piece of interconnected products in the AI sphe
 ##### download directory and enter it:
 ```
 git clone https://github.com/GabrieleRisso/aiyu.git 
-cd /aiyu/
+cd aiyu/
 ```
 ##### set the key to global scope: 
 ```
@@ -76,6 +76,7 @@ export OPENAI_API_KEY="your key string here"
 ```
 t2a "Who is Lain? and what is a this serial exeriments story all about?"
 ```
+
 ![alt text](https://github.com/gabrielerisso/aiyu/blob/main/t2a.jpg?raw=true)
 
 
