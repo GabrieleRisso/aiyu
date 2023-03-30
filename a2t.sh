@@ -4,6 +4,7 @@ filter=filter.rnn && wget -qO $filter https://raw.githubusercontent.com/GregorR/
 
 session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
 
+export OPENAI_API_KEY=" - "
 
 
 
@@ -28,9 +29,9 @@ then
     a2t ()
 	{
         if ! command -v whisper-ctranslate2  2>/dev/null 1>&2;
-		then
+	then
             echo "whisper-ctranslate2 is not installed on your system.  Install it: pip install -U whisper-ctranslate2" >&2;
-            echo "o-whis is disabled" >&2;
+            echo "o-a2t is disabled" >&2;
         else
 		    if ! type o-a2t 2>/dev/null 1>&2;
             then
