@@ -1,6 +1,8 @@
-fboulnois_stable-diffusion-docker_ Run the official Stable Diffusion releases in a Docker container with txi2img, img2img, depth2img, pix2pix, upscale4x, and inpaint.
+# Small but handy functions. For Personal use only.
+# Use it at your own risk!
+# Author: Gabriele Risso  License: Apache 2.0
 
-
+#fboulnois_stable-diffusion-docker_ Run the official Stable Diffusion releases in a Docker container with txi2img, img2img, depth2img, pix2pix, upscale4x, and inpaint.
 
 filter=filter.rnn && wget -qO $filter https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn
 
