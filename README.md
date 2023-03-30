@@ -76,7 +76,7 @@ export OPENAI_API_KEY="your key string here"
 ```
 t2a "Who is Lain? and what is a this serial exeriments story all about?"
 ```
-![alt text](https://github.com/gabrielerisso/aiyu/edit/main/img/t2a.png?raw=true)
+![alt text](https://github.com/gabrielerisso/aiyu/blob/main/t2a.jpg?raw=true)
 
 
 ## Good to know:
