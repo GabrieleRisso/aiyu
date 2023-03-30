@@ -101,4 +101,4 @@ Memory usage statistics will be out soon.
 
 ## Copyright
 
-Copyright © 2023 Gabriele Risso. Licensed under Apache 2.0
+Copyright © 2023 Gabriele Risso. 
