@@ -27,6 +27,7 @@ sk -> speaker
 | a  	| a2c  	| `a2t`  	| `a2a`  	| `a2s`  	| a2i 	|  a2tr 	|
 | s  	|  c2s   	| s2t  	| s2a  	| s2s  	| s2i 	|  s2tr 	|
 | i 	| i2c 	| i2t 	| i2a 	| i2s 	|  `i2i`  	|  i2tr 	|
+
 Current state of implemented function
 
 ## What is **aiyu**:
