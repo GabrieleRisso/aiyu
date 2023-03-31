@@ -20,13 +20,13 @@ sk -> speaker
 ```
 </details>
 
-|    	| c    	| t    	| a    	| s    	|  tr  	|   	|
+|    	| c    	| t    	| a    	| s    	|  i 	|  tr 	|
 |----	|------	|------	|------	|------	|------	|---	|
-| c  	| c2c  	| c2t  	| c2a  	|  /   	| c2tr 	|   	|
-| t  	| `t2c`  	| `t2t`  	| `t2a`  	| t2s 	| `t2tr` 	|   	|
-| a  	| a2c  	| `a2t`  	| `a2a`  	| `a2s`  	| a2tr 	|   	|
-| s  	|  /   	| s2t  	| s2a  	| s2s  	| s2tr 	|   	|
-| tr 	| tr2c 	| tr2t 	| tr2a 	| tr2s 	|  ?   	|   	|
+| c  	| c2c  	| c2t  	| c2a  	|  c2s   	| c2i 	| c2tr 	|
+| t  	| `t2c`  	| `t2t`  	| `t2a`  	| t2s 	| `t2i` 	| `t2tr`  	|
+| a  	| a2c  	| `a2t`  	| `a2a`  	| `a2s`  	| a2i 	|  a2tr 	|
+| s  	|  c2s   	| s2t  	| s2a  	| s2s  	| s2i 	|  s2tr 	|
+| i 	| i2c 	| i2t 	| i2a 	| i2s 	|  `i2i`  	|  i2tr 	|
 
 With some algebra we can cover most of those.
 
