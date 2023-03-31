@@ -15,6 +15,7 @@ a  -> audio
 s  -> subtitle
 tr -> translation
 i  -> image
+v --> video
 sk -> speaker
 ```
 </details>
@@ -29,10 +30,10 @@ sk -> speaker
 
 With some algebra we can cover most of those.
 
-## What is it:
+## What is **aiyu**:
 
-This repository aims to fill the momentary void of usable interconnect products in the AI sphere by providing a set of powerful functions and resources for creating interconnected, AI-powered products. 
-There is currently a lack of cohesive integrated systems that allow these technologies to work together seamlessly. That's why **aiyu** comes in.
+This repository aims to fill the momentary void of viable interconnect products in the AI sphere by providing a set of powerful functions and resources for creating interconnected, AI-powered products. 
+There is currently a lack of cohesive integrated systems that allow these technologies to work together seamlessly.  **aiyu**.
 
 Shell pipelines are an essential piece of interconnected products in the AI sphere due to their simplicity, power, and hopefully well-documented nature. Aiyu pipelines allow for quick and easy processing of data, enabling AI systems to ingest, manipulate, and transform large amounts of data in real-time. 
 
@@ -93,7 +94,7 @@ Memory usage statistics will be out soon.
 [wiki](https://github.com/GabrieleRisso/aiyu/edit/main/wiki.md "Aiyu Wiki")
 
 
-### I need your collaboartion to make **aiyu** awsome!
+### I need your collaboartion to make **aiyu** awesome
  
  * .env global
  * per-command tuning
