@@ -80,12 +80,8 @@ export OPENAI_API_KEY="your key string here"
 ```
 ##### use it like this:
 ```
-t2a "Who is Lain? and what is a this serial exepriments story all about?"
+t2a "Who is Lain?"
 ```
-
-![alt text](https://github.com/gabrielerisso/aiyu/blob/main/t2a.jpg?raw=true)
-
-
 Dependancies are prompted if missing and a link to install them is provided.
 Functions mostly leverages **Gum**, **Python**, **Docker**.
 Memory usage statistics will be out soon.
@@ -94,12 +90,11 @@ Memory usage statistics will be out soon.
 [wiki](https://github.com/GabrieleRisso/aiyu/edit/main/wiki.md "Aiyu Wiki")
 
 
-### I need your collaboartion to make **aiyu** awesome
+
+### open for collaboartion, let's make **aiyu** awesome
  
  * .env global
  * per-command tuning
- * code compression
- * code revision
  * wiki documentation 
  * compose functions to make new ones
  * suggestions are desired!
