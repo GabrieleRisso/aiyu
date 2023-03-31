@@ -33,14 +33,14 @@ Current state of implemented function
 ## What is **aiyu**:
 
 This repository aims to fill the momentary void of viable interconnect products in the AI sphere by providing a set of powerful functions and resources for creating interconnected, AI-powered products. 
-There is currently a lack of cohesive integrated systems that allow these technologies to work together seamlessly.  **aiyu**.
+
 
 Shell pipelines are an essential piece of interconnected products in the AI sphere due to their simplicity, power, and hopefully well-documented nature. Aiyu pipelines allow for quick and easy processing of data, enabling AI systems to ingest, manipulate, and transform large amounts of data in real-time. 
 
 ## Features:
 
  * Hackable
- * it support most languages
+ * It support most languages
  * Linux and Mac compatible. Windows is coming soon.
  * Beautiful [Charm](https://charm.sh/ "Charm") TUI interface written in Go.
  * Terminal editor and Markdown reader.
