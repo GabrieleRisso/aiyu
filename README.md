@@ -20,6 +20,11 @@ sk -> speaker
 ```
 </details>
 
+|     | t text    | a audio |
+|---- |------ |------ |
+| t   | `t2t`   | `t2a`   |
+| a   | `a2t`   | `a2a`   |
+
 |    	| c    	| t    	| a    	| s    	|  i 	|  tr 	|
 |----	|------	|------	|------	|------	|------	|---	|
 | c  	| c2c  	| c2t  	| c2a  	|  c2s   	| c2i 	| c2tr 	|
@@ -28,14 +33,13 @@ sk -> speaker
 | s  	|  c2s   	| s2t  	| s2a  	| s2s  	| s2i 	|  s2tr 	|
 | i 	| i2c 	| i2t 	| i2a 	| i2s 	|  `i2i`  	|  i2tr 	|
 
-Current state of implemented function
+Current state of implemented functions
 
 ## What is **aiyu**:
 
 This repository aims to fill the momentary void of viable interconnect products in the AI sphere by providing a set of powerful functions and resources for creating interconnected, AI-powered products. 
 
-
-Shell pipelines are an essential piece of interconnected products in the AI sphere due to their simplicity, power, and hopefully well-documented nature. Aiyu pipelines allow for quick and easy processing of data, enabling AI systems to ingest, manipulate, and transform large amounts of data in real-time. 
+Shell pipelines are an essential piece of interconnected products in the AI sphere due to their simplicity, power, and hopefully well-documented nature. Aiyu pipelines allow for quick and simple processing of data, enabling AI systems to ingest, manipulate, and transform large amounts of data in real-time. 
 
 ## Features:
 
@@ -82,9 +86,22 @@ export OPENAI_API_KEY="your key string here"
 ```
 t2a "Who is Lain?"
 ```
-Dependancies are prompted if missing and a link to install them is provided.
-Functions mostly leverages **Gum**, **Python**, **Docker**.
+##### Dependancies
+
+They are prompted if missing and a link to install them is provided.
+Functions mostly leverages **Python** libs installed via **pip** and pre-build **Docker** images.
 Memory usage statistics will be out soon.
+
+##### What project is doing the AI eavy lifting:
+
+ * [shell-gpt](https://github.com/TheR1D/shell_gpt "text-to-text")
+ * [gtts](https://gtts.readthedocs.io/en/latest/index.html "text-to-speach")
+ * [aeneas](https://github.com/readbeyond/aeneas "subtitles")
+ * [translate-shell](https://github.com/soimort/translate-shell "translate")
+ * [whisper-c2translate](https://github.com/jordimas/whisper-ctranslate2 "audio-to-text")
+ * [mtts](https://github.com/mozilla/TTS "text-to-vocie")
+ * [rnnnoise](https://github.com/GregorR/rnnoise-models "noise filter")
+
 
 ### Tutorial for functions:
 [wiki](https://github.com/GabrieleRisso/aiyu/edit/main/wiki.md "Aiyu Wiki")
@@ -98,6 +115,21 @@ Memory usage statistics will be out soon.
  * wiki documentation 
  * compose functions to make new ones
  * suggestions are desired!
+
+
+### Citation
+If you utilize this reposistory please consider citing it with:
+
+```
+@misc{aiyu,
+  author = {Gabriele Risso},
+  title = {aiyu: core shell functions for andvanced ai},
+  year = {2023},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/gabrielerisso/aiyu}},
+}
+```
 
 
 ### Copyright
