@@ -87,7 +87,7 @@ export OPENAI_API_KEY="your key string here"
 t2a "Who is Lain?"
 ```
 
-##### create pipeline (WIP)
+### create pipeline (WIP)
 
 Suppose **question.mp3** is a file containing a question in english  
 ```
