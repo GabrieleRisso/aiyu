@@ -35,11 +35,11 @@ sk -> speaker
 
 Current state of implemented functions
 
-## What is **aiyu**:
+## What is **AIyu**:
 
 This repository aims to fill the momentary void of viable interconnect products in the AI sphere by providing a set of powerful functions and resources for creating interconnected, AI-powered products. 
 
-Shell pipelines are an essential piece of interconnected products in the AI sphere due to their simplicity, power, and hopefully well-documented nature. Aiyu pipelines allow for quick and simple processing of data, enabling AI systems to ingest, manipulate, and transform large amounts of data in real-time. 
+Shell pipelines are an essential piece of interconnected products in the AI sphere due to their simplicity, power, and hopefully well-documented nature. AIyu pipelines allow for quick and simple processing of data, enabling AI systems to ingest, manipulate, and transform large amounts of data in real-time. 
 
 ## Features:
 
