@@ -124,6 +124,7 @@ Memory usage statistics will be out soon.
  * compose functions to make new ones
  * suggestions are desired!
 
+### Leave a star if you like this
 
 ### Citation
 If you utilize this reposistory please consider citing it with:
