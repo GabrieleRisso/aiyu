@@ -43,23 +43,23 @@ Shell pipelines are an essential piece of interconnected products in the AI sphe
 
 ## Features:
 
- * Hackable
+ * **Hackable**
  * It support most languages
- * Linux and Mac compatible. Windows is coming soon.
- * Beautiful [Charm](https://charm.sh/ "Charm") TUI interface written in Go.
- * Terminal editor and Markdown reader.
- * Ask gpt and gtts answer to speaker (text2speaker) -> t2sk
- * Ask gpt and gtts answer to audio (text2audio) -> t2a
- * Ask gpt and produce specifically code (code2text) -> c2t
- * Take audio and produce text transcript (audio2text) -> a2t
- * Take audio and produce subtitles transcript (audio2subtitles) -> a2s
+ * **Linux** and **Mac** compatible. Windows is coming soon.
+ * Beautiful [Charm](https://charm.sh/ "Charm") **TUI interface** written in Go.
+ * Terminal editor and **Markdown reader**.
+ * Ask gpt and gtts answer to **speaker** (text2speaker) -> t2sk
+ * Ask gpt and gtts answer to **audio** (text2audio) -> t2a
+ * Ask gpt and produce specifically **code** (code2text) -> c2t
+ * Take audio and produce text **transcript** (audio2text) -> a2t
+ * Take audio and produce **subtitles** transcript (audio2subtitles) -> a2s
  * Prompt gpt and produce text (prompt2text) -> p2t
  * Take text and translate into text (text2text) -> t2tr
- * Take audio and enhance quality into audio (audio2audio) -> a2a
+ * Take audio and **enhance quality** into audio (audio2audio) -> a2a
  * Take audio & text transcript and produce subtitles (audio+text2subtitles) -> at2s
- * Take text and stable diffusion produce image (text2image) -> t2i
+ * Take text and stable diffusion produce **image** (text2image) -> t2i
  * Concise pipelines (inputs2output)
- * CPU focus on performance
+ * CPU focus on **performance**
  * Documented (very soon)
  * Hackable again!
 
