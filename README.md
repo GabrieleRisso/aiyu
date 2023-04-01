@@ -63,6 +63,8 @@ Shell pipelines are an essential piece of interconnected products in the AI sphe
  * Documented (very soon)
  * Hackable again!
 
+### Screenshots & Tutorial: [Wiki](https://github.com/GabrieleRisso/aiyu/edit/main/wiki.md "Aiyu Wiki")
+
  <p align="left"> <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FGabrieleRisso%2Faiyu&count_bg=%234D4244&title_bg=%23EA2424&icon_color=%233E3636&title=aiyu+&edge_flat=false"/></a> </p>
 
 
@@ -114,11 +116,8 @@ Memory usage statistics will be out soon.
  * [rnnnoise](https://github.com/GregorR/rnnoise-models "noise filter")
  * [stable-diffusion](https://github.com/fboulnois/stable-diffusion-docker "image gen")
 
-### Tutorial for functions:
 
-[wiki](https://github.com/GabrieleRisso/aiyu/edit/main/wiki.md "Aiyu Wiki")
-
-### open for collaboartion, let's make **aiyu** awesome
+### Open for collaboartions; let's make **aiyu** awesome toghter
  
  * .env global
  * per-command tuning
