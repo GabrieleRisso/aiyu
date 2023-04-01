@@ -1,6 +1,8 @@
 WIP
 
-### Text to audio: asks gpt3.5turbo and produce an audio response. 
+### t2a: text to audio 
+
+asks gpt3.5turbo and produce an audio response. 
 
 4 ways of using it:
 
