@@ -104,7 +104,7 @@ They are prompted if missing and a link to install them is provided.
 Functions mostly leverages **Python** libs installed via **pip** and pre-build **Docker** images.
 Memory usage statistics will be out soon.
 
-##### Who's project is doing the AI eavy lifting? 
+##### Who's project is doing the AI heavy lifting? 
 
  * [shell-gpt](https://github.com/TheR1D/shell_gpt "text-to-text")
  * [gtts](https://gtts.readthedocs.io/en/latest/index.html "text-to-speach")
