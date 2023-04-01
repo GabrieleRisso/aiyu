@@ -104,9 +104,8 @@ Memory usage statistics will be out soon.
 
 
 ### Tutorial for functions:
+
 [wiki](https://github.com/GabrieleRisso/aiyu/edit/main/wiki.md "Aiyu Wiki")
-
-
 
 ### open for collaboartion, let's make **aiyu** awesome
  
