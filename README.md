@@ -90,8 +90,7 @@ t2a "Who is Lain?"
 
 ### AIyu pipeline (WIP)
 
-example:
-Suppose **question.mp3** is a file containing a question in english  
+example: suppose **question.mp3** is a file containing a question in english  
 ```
 a2t question.mp3 && t2tr it && t2a
 ```
