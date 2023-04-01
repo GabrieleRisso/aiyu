@@ -86,13 +86,22 @@ export OPENAI_API_KEY="your key string here"
 ```
 t2a "Who is Lain?"
 ```
+
+##### create pipeline (WIP)
+
+Suppose **question.mp3** is a file containing a question in english  
+```
+a2t question.mp3 && t2tr it && t2a
+```
+This turns the audio question into english text, translate it in italian, then ask the question in italian to gpt3.5 and produce italian audio answare. 
+
 ##### Dependancies
 
 They are prompted if missing and a link to install them is provided.
 Functions mostly leverages **Python** libs installed via **pip** and pre-build **Docker** images.
 Memory usage statistics will be out soon.
 
-##### What project is doing the AI eavy lifting:
+##### Who's project is doing the AI eavy lifting? 
 
  * [shell-gpt](https://github.com/TheR1D/shell_gpt "text-to-text")
  * [gtts](https://gtts.readthedocs.io/en/latest/index.html "text-to-speach")
@@ -101,7 +110,7 @@ Memory usage statistics will be out soon.
  * [whisper-c2translate](https://github.com/jordimas/whisper-ctranslate2 "audio-to-text")
  * [mtts](https://github.com/mozilla/TTS "text-to-vocie")
  * [rnnnoise](https://github.com/GregorR/rnnoise-models "noise filter")
-
+ * [stable-diffusion](https://github.com/fboulnois/stable-diffusion-docker "image gen")
 
 ### Tutorial for functions:
 
