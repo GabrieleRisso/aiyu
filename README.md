@@ -1,4 +1,4 @@
-## Core shell functions for AI
+## Core shell functions for AI **alfa**
 
 **Open.ai** Gpt-3.5turbo text generation meets **Google** gTTS and **Mozzilla** TTS audio generation. Featuers improved audio quality using ffmpeg RNN noise supression filter and subtitle timestamp accuracy using **Aeneas** forced alignment.
 Fast **Whisper** ctranslate2 transcript generation, Translate-shell text to text translation, **Stable Diffusion** text to image and much more.
@@ -39,15 +39,14 @@ Current state of implemented functions
 
 In essence, the Aiyu Shell pipelines serve as the interweaving adhesive that binds the various AI components together - a technological superglue of sorts!
 
-
 ## Features:
 
  * **Hackable**
  * It support most languages
  * **Linux** and **Mac** compatible. Windows is coming soon.
  * Beautiful [Charm](https://charm.sh/ "Charm") **TUI interface** written in Go.
- * Terminal editor and **Markdown reader**.
- * CPU focus on **performance**
+ * Bash function editor and experimental **Markdown reader**.
+ * focused on CPU **performance**
  * Documented (very soon)
 <details>
 
