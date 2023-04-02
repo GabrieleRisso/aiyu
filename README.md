@@ -99,15 +99,14 @@ example: suppose **question.mp3** is a file containing a question in english
 ```
 a2t question.mp3 && t2tr it && t2a
 ```
-This turns the audio question into english text, translate it in italian, then ask the question in italian to gpt3.5 and produce italian audio answare. 
+This turns the audio question into English text, translates it in Italian, then ask the question in Italian to gpt3.5 and produce Italian audio answer.
 
 Every function always looks for newly created inputs in /dev/shm/ if not explicitly specified.
 
-##### Dependancies
+##### Dependencies
 
-They are prompted if missing and a link to install them is provided.
-Functions mostly leverages **Python** libs installed via **pip** and pre-build **Docker** images.
-Memory usage statistics will be out soon.
+They are prompted if missing and a link to install them is provided. Functions mostly leverages Python libs installed via pip and pre-build Docker images. Memory usage statistics will be out soon.
+
 
 ##### Who's project is doing the AI heavy lifting? 
 
