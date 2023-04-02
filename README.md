@@ -37,9 +37,8 @@ Current state of implemented functions
 
 ## What is **AIyu**:
 
-This repository aims to fill the momentary void of viable interconnect products in the AI sphere by providing a set of powerful functions and resources for creating interconnected, AI-powered products. 
+In essence, the Aiyu Shell pipelines serve as the interweaving adhesive that binds the various AI components together - a technological superglue of sorts!
 
-Shell pipelines are an essential piece of interconnected products in the AI sphere due to their simplicity, power, and hopefully well-documented nature. AIyu pipelines allow for quick and simple processing of data, enabling AI systems to ingest, manipulate, and transform large amounts of data in real-time. 
 
 ## Features:
 
@@ -48,20 +47,26 @@ Shell pipelines are an essential piece of interconnected products in the AI sphe
  * **Linux** and **Mac** compatible. Windows is coming soon.
  * Beautiful [Charm](https://charm.sh/ "Charm") **TUI interface** written in Go.
  * Terminal editor and **Markdown reader**.
- * Ask gpt and gtts answer to **speaker** (text2speaker) -> t2sk
- * Ask gpt and gtts answer to **audio** (text2audio) -> t2a
- * Ask gpt and produce specifically **code** (code2text) -> c2t
- * Take audio and produce text **transcript** (audio2text) -> a2t
- * Take audio and produce **subtitles** transcript (audio2subtitles) -> a2s
- * Prompt gpt and produce text (prompt2text) -> p2t
- * Take text and translate into text (text2text) -> t2tr
- * Take audio and **enhance quality** into audio (audio2audio) -> a2a
- * Take audio & text transcript and produce subtitles (audio+text2subtitles) -> at2s
- * Take text and stable diffusion produce **image** (text2image) -> t2i
- * Concise pipelines (inputs2output)
  * CPU focus on **performance**
  * Documented (very soon)
- * Hackable again!
+<details>
+
+<summary>Concise pipelines (inputs2output)</summary>
+ 
+ 🔹 Ask gpt and gtts answer to **speaker** (text2speaker) -> t2sk <br /> 
+ 🔹 Ask gpt and gtts answer to **audio** (text2audio) -> t2a  <br />
+ 🔹 Ask gpt and produce specifically **code** (code2text) -> c2t  <br />
+ 🔹 Take audio and produce text **transcript** (audio2text) -> a2t  <br />
+ 🔹 Take audio and produce **subtitles** transcript (audio2subtitles) -> a2s  <br />
+ 🔹 Prompt gpt and produce text (prompt2text) -> p2t  <br />
+ 🔹 Take text and translate into text (text2text) -> t2tr  <br />
+ 🔹 Take audio and **enhance quality** into audio (audio2audio) -> a2a  <br />
+ 🔹 Take audio & text transcript and produce subtitles (audio+text2subtitles) -> at2s  <br />
+ 🔹 Take text and stable diffusion produce **image** (text2image) -> t2i  <br />
+
+
+ 
+</details>
 
 ### Screenshots & Tutorial: [Wiki](https://github.com/GabrieleRisso/aiyu/edit/main/wiki.md "Aiyu Wiki")
 
