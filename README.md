@@ -129,7 +129,7 @@ They are prompted if missing and a link to install them is provided. Functions m
  * compose functions to make new ones
  * suggestions are desired!
 
-### Leave a star if you like this
+#### Leave a star if you like this
 
 ### Citation
 If you utilize this reposistory please consider citing it with:
@@ -137,7 +137,7 @@ If you utilize this reposistory please consider citing it with:
 ```
 @misc{aiyu,
   author = {Gabriele Risso},
-  title = {aiyu: core shell functions for andvanced ai},
+  title = {aiyu: core shell functions for advanced ai},
   year = {2023},
   publisher = {GitHub},
   journal = {GitHub repository},
