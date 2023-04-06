@@ -1,0 +1,73 @@
+# Small but handy functions. For Personal use only.
+# Use it at your own risk!
+# Author: Gabriele Risso  License: Apache 2.0
+
+lang=${lang:-$(echo ${LANG:0:2})};
+
+session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
+
+audiow="/dev/shm/audiow_$session.mp3"
+voicew="/dev/shm/voicew_$session.mp3"
+
+voiceg="/dev/shm/vocieg_$session.mp3"
+audiog="/dev/shm/audiog_$session.mp3"
+textg="/dev/shm/textg_$session.txt"
+
+input=""
+output=""
+
+if ! type m2a 2>/dev/null 1>&2;
+then
+    m2a ()
+	{
+	if ! python3 -c "import pvrecorder" 2>/dev/null 1>&2;
+		then
+            echo "PV_Recorder is not installed on your system. Install it: pip3 install pvrecorder and re-try" >&2;
+            echo "m2a-pvrecorder is disabled" >&2;
+		elif ! command -v gum --version 2>/dev/null 1>&2;
+	    then
+            echo " gum is not installed on your system. Install it: https://github.com/charmbracelet/gum#installation and re-try" >&2;
+        else
+		    if ! type m2a-pvrecorder 2>/dev/null 1>&2;
+            then
+		        m2a-pvrecorder ()
+                {
+
+                set -euo pipefail;
+
+			    echo '{{ Bold "[!] record started" }}' | gum format -t template >&2;
+
+                local start=$SECONDS;
+
+				local output="$1";
+                local output=${output:-$(echo $audiow)};
+
+                gum style "using microphone for audio recording." "INPUT: microphone" "OUTPUT: audio saved at $output" "DEVICE: default mic" "SESSION: $session" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";
+								
+	            # subtitle to text: https://github.com/Picovoice/pvrecorder/tree/main/sdk/python
+
+				wget -qO - https://raw.githubusercontent.com/Picovoice/pvrecorder/main/sdk/python/demo.py > /dev/shm/recorder.py
+   			    echo '{{ Bold "[+] Recording has started! stop it with CTRL+C" }}' | gum format -t template >&2;
+				python3 /dev/shm/recorder.py --output_path $output;
+
+                echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
+			    echo '{{ Bold "[+] recorder OK" }}' | gum format -t template >&2;
+  			    echo ' ' >&2;
+
+				CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "play recorded audio" "help" "contribute to aiyu");
+				[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="a2t" --height=9);
+				[[ "$CHOICE" == "play recorded audio" ]] && ffplay -nodisp -autoexit -loglevel fatal $output;
+				[[ "$CHOICE" == "help" ]] && glow -p README.md;
+				[[ "$CHOICE" == "contribute to aiyu" ]] && echo "Great! I thought so, thank you for making $(gum style --bold "aiyu") the best! leave a $(gum style --bold "star") if you like this. Go to: https://github.com/GabrieleRisso/aiyu";		
+				
+		        }
+		    else
+                echo '{{ Bold "m2a-pvrecorder is set on the system" }}' | gum format -t template >&2;
+            fi
+        fi		
+		
+		m2a-pvrecorder "$1";
+	}
+else
+    echo '{{ Bold "m2a is set on the system" }}' | gum format -t template >&2;
+fi

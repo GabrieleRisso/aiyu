@@ -4,7 +4,6 @@
 
 lang=${lang:-$(echo ${LANG:0:2})};
 
-filter=filter.rnn && wget -qO $filter https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn
 
 session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
 
@@ -108,42 +107,44 @@ then
             then
 		        o-ttrans ()
                 {
-					
-				 local input="$2";
-                 local newest_file="";    #=$(stat -c '%Y %n' /dev/shm/*.mp3 | sort -nr | head -n1 | cut -d' ' -f2);
-                 local txt_file=$(ls -t /dev/shm/*.txt | head -1) ;  # find newest *.mp3 file
-                 local srt_file=$(ls -t /dev/shm/*.srt | head -1);   # find newest *.xyz file
-                               
-                 if [[ $(stat -c %Y "$txt_file") -gt $(stat -c %Y "$srt_file") ]]; then
-                       newest_file="$txt_file";
-                 else
-                       newest_file="$srt_file";
-                 fi
-                                
-               
-				echo '{{ Bold "[!] most recent file --> '$newest_file'" }}' | gum format -t template >&2;
 				
-                [ -f $newest_file ] && local input=${input:-$(echo $newest_file)} || local input=${input:-$(echo $(gum file $PWD))};				
+				echo '{{ Bold "[!] traduction started" }}' | gum format -t template >&2;
+
+				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
+
+				local input="$2";
+
+				local newest_txtfile="";
+  				local newest_txtfile=$(find /dev/shm/ -cmin -1 -type f -name "*.txt" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
+                if [ -n "$newest_txtfile" ]; then 
+					echo '{{ Bold "[!] most recent text file --> '$newest_file'" }}' | gum format -t template >&2;
+					local input=${input:-$(echo $newest_txtfile)};
+				fi
+
+				local newest_srtfile="";
+  				local newest_srtfile=$(find /dev/shm/ -cmin -1 -type f -name "*.txt" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
+                if [ -n "$newest_srtfile" ]; then 
+					echo '{{ Bold "[!] most recent subtitle file --> '$newest_file'" }}' | gum format -t template >&2;
+					local input=${input:-$(echo $newest_srtfile)};
+				fi
 				
+                if [ -z "$input" ]; then
+					echo '{{ Bold "[+] Select a mp3 file. Use keyboard arrows < > to traverse directories, up or down arrows to move in the directory." }}' | gum format -t template >&2;
+					local input=${input:-$(echo $(gum file $PWD))};
+                fi
+
 				local output="$tradg"; 
 				
-
 				local langto="$1"
 				
                 local langto=${langto:-$(echo "en")};
 				local langfrom=${langfrom:-$(echo "auto")}; #sould autodetect language
 			
-			    
-				if [ -z "$input" ];
-                then
-                    echo "No input" >&2;
-                    return 1;
-                fi
-				
 				gum style  "input text: $input" "language from: $langfrom" "output: $output" "language to: $langto" "SESSION: $session" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";
                 				
 				local intrad=$(<"$input");
-						
+
+				#using https://github.com/soimort/translate-shell 		
 				gum spin --spinner points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using trad for translation generation..." -- sleep 2				
 				docker run --rm -it soimort/translate-shell -shell -brief -w 10 :"$langto" "$intrad" | tail -n +3  > $output;  
 				
@@ -152,11 +153,12 @@ then
 				
 				echo '{{ Bold "[+] translation OK" }}' | gum format -t template >&2;
 				
-								
-								
-				CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "edit output text in glow" "edit input text in glow" "help" "contribute to aiyu");
+				echo '{{ Bold "[?] What now?  press ESC to exit." }}' | gum format -t template >&2;
+				echo ' ' >&2;
+												
+				CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "edit output translation in glow" "edit input text in glow" "help" "contribute to aiyu");
 				[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="t2tr" --height=9);
-				[[ "$CHOICE" == "edit output translation in glow" ]] && cp $tradg "${tradw::-4}.md" && glow "/dev/shm/";
+				[[ "$CHOICE" == "edit output translation in glow" ]] && cp $tradg "${tradg::-4}.md" && glow "/dev/shm/";
 				[[ "$CHOICE" == "edit input text in glow" ]] && cp $input "${input::-4}.md" && glow "/dev/shm/";
 				[[ "$CHOICE" == "help" ]] && glow -p README.md;
 				[[ "$CHOICE" == "contribute to aiyu" ]] && echo "Great! I thought so, thank you for making $(gum style --bold "aiyu") is the best! leave a $(gum style --bold "star") if you like this. Go to: https://github.com/GabrieleRisso/aiyu";

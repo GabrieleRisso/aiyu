@@ -1,0 +1,113 @@
+# Small but handy functions. For Personal use only.
+# Use it at your own risk!
+# Author: Gabriele Risso  License: Apache 2.0
+
+lang=${lang:-$(echo ${LANG:0:2})};
+
+filter=filter.rnn && wget -qO $filter https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn
+
+session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
+
+
+
+
+audiow="/dev/shm/audiow_$session.mp3"
+voicew="/dev/shm/voicew_$session.mp3"
+textw="/dev/shm/textw_$session.txt"
+tradw="/dev/shm/tradw_$session.txt"
+subw="/dev/shm/subw_$session.srt"
+promptw="/dev/shm/promptw_$session.txt"
+
+
+promptg="/dev/shm/promptg_$session.txt"
+
+voiceg="/dev/shm/vocieg_$session.mp3"
+audiog="/dev/shm/audiog_$session.mp3"
+textg="/dev/shm/textg_$session.txt"
+askg="/dev/shm/askg_$session.txt"
+subg="/dev/shm/subg_$session.srt"
+input=""
+output=""
+tmp=""
+
+if ! type p2t 2>/dev/null 1>&2;
+then
+    p2t ()
+	{
+		
+	    if ! command -v docker --version 2>/dev/null 1>&2;
+	    then
+            echo " Gum docker is not installed on your system. Install it: https://docs.docker.com/engine/install and re-try" >&2;
+            echo "p2t-sgpt is disabled" >&2;
+        elif ! command -v gum --version 2>/dev/null 1>&2;
+	    then
+            echo " gum is not installed on your system. Install it: https://github.com/charmbracelet/gum#installation and re-try" >&2;
+        else
+		    if ! type p2t-sgpt 2>/dev/null 1>&2;
+            then
+				
+				echo '{{ Bold "[*] language: '$lang' " }}' | gum format -t template >&2;
+				echo '{{ Bold "[*] session: '$session' " }}' | gum format -t template >&2;
+
+		        p2t-sgpt ()
+                {
+				
+				
+				echo '{{ Bold "[!] sgpt started" }}' | gum format -t template >&2;
+				
+				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
+
+
+				local input="$1";
+
+				#select the lastly created file.txt (1 minute old) located in /dev/shm/ OR input prompt directly
+				local newest_file="";
+  				local newest_file=$(find /dev/shm/ -cmin -1 -type f -name "*.txt" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
+                if [ -n "$newest_file" ]; then 
+					echo '{{ Bold "[!] most recent text file --> '$newest_file'" }}' | gum format -t template >&2;
+					local input=${input:-$(echo $newest_file)};
+				else 
+					echo '{{ Bold "[+] Input prompt" }}' | gum format -t template >&2;
+					local input=${input:-$(echo $(gum input --char-limit=4000 --placeholder="Type something here, just ask me!" --width="$(($COLUMNS-5))" --header="I'm an AI use me wisely!" --header.italic --header.border="rounded" --header.foreground="50" ) )};
+				fi
+
+                echo $input > $promptg >&2;
+
+                gum spin -s points --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using Docker to interact with sgpt..." --\
+                docker run --rm --env OPENAI_API_KEY -v gpt-cache:/tmp/shell_gpt ghcr.io/ther1d/shell_gpt --no-animation --chat "$session" "$input" > "$textg";
+				
+				local output="";
+                local output=$(cat $textg | tr -d '\n')  >&2;
+
+                if [ -z "$output" ]; then
+                    echo '{{ Bold "Open.ai servers are probably too busy or unreachable, try again for more luck..." }}' | gum format -t template >&2;
+                    return 1;
+                fi
+				
+			    gum style "INPUT: saved at $promptg" "$input" "OUTPUT: saved at $textg" "$output" "SESSION: $session" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";
+                gum confirm --negative="no" --affirmative="yes, let's read!" "open pager to read output?" --timeout=15s --selected.foreground="0" --unselected.foreground="44" --selected.italic --unselected.italic --selected.background="50" --prompt.italic --prompt.margin="0 0 0 $(($COLUMNS -29))" \
+                && gum pager --soft-wrap --border-foreground="86" --help.foreground="200" --show-line-numbers < $textg; 
+                
+				echo '{{ Bold "[+] sgpt OK" }}' | gum format -t template >&2;
+				
+				echo '{{ Bold "[?] What now?  press ESC to exit." }}' | gum format -t template >&2;
+				echo ' ' >&2;
+								
+				CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "edit output text in glow" "edit input text in glow" "help" "contribute to aiyu");
+				[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="p2t" --height=9);
+				[[ "$CHOICE" == "edit output text in glow" ]] && cp $textg "${textw::-4}.md" && glow "/dev/shm/";
+				[[ "$CHOICE" == "edit input text in glow" ]] && cp $textg "${textg::-4}.md" && glow "/dev/shm/";
+				[[ "$CHOICE" == "help" ]] && glow -p README.md;
+				[[ "$CHOICE" == "contribute to aiyu" ]] && echo "Great! I thought so, thank you for making $(gum style --bold "aiyu") is the best! leave a $(gum style --bold "star") if you like this. Go to: https://github.com/GabrieleRisso/aiyu";
+				
+                }
+		    else
+                echo '{{ Color "50" "0" " p2t-sgpt is set on the system." }}' | gum format -t template >&2;
+            fi
+        fi
+
+		p2t-sgpt "$1";
+	}
+else
+    echo '{{ Bold "p2t is set on the system" }}' | gum format -t template >&2;
+fi
