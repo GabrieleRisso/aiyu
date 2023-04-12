@@ -33,7 +33,7 @@ then
 		        m2a-pvrecorder ()
                 {
 
-                set -euo pipefail;
+                set -uo pipefail;
 
 			    echo '{{ Bold "[!] record started" }}' | gum format -t template >&2;
 
@@ -52,7 +52,9 @@ then
 
                 echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
 			    echo '{{ Bold "[+] recorder OK" }}' | gum format -t template >&2;
-  			    echo ' ' >&2;
+
+				echo '{{ Bold "[?] What now?  press ESC to exit." }}' | gum format -t template >&2;
+				echo ' ' >&2;
 
 				CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "play recorded audio" "help" "contribute to aiyu");
 				[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="a2t" --height=9);

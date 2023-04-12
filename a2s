@@ -40,7 +40,7 @@ then
 		        a2s-whisp ()
                 {
 
-                set -euo pipefail;
+                #set -euo pipefail;
 
                 echo '{{ Bold "[!] whisper subtitles started" }}' | gum format -t template >&2;
 
@@ -53,7 +53,7 @@ then
 				#if input text exis then set it as input, if not select it
 				
 				local input="$1";
-
+ #1 is te counter time. 0 to achive full flow test
 				#select the lastly created file.mp3 (1 minute old) located in /dev/shm/ OR select a local .mp3 file
 				local newest_file="";
   				local newest_file=$(find /dev/shm/ -cmin -1 -type f -name "*.mp3" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
@@ -82,6 +82,8 @@ then
 
                 gum confirm --negative="no" --affirmative="yes, let's read!" "open pager to read subtitles?" --timeout=15s --selected.foreground="0" --unselected.foreground="44" --selected.italic --unselected.italic --selected.background="50" --prompt.italic --prompt.margin="0 0 0 $(($COLUMNS -29))" \
                 && gum pager --soft-wrap --border-foreground="86" --help.foreground="200" --show-line-numbers < $output;
+
+                echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
                 echo '{{ Bold "[+] subtitles OK" }}' | gum format -t template >&2;
 				
 				echo '{{ Bold "[?] What now?  press ESC to exit." }}' | gum format -t template >&2;

@@ -4,8 +4,6 @@
 
 lang=${lang:-$(echo ${LANG:0:2})};
 
-filter=filter.rnn && wget -qO $filter https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn
-
 session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
 
 
@@ -26,6 +24,7 @@ audiog="/dev/shm/audiog_$session.mp3"
 textg="/dev/shm/textg_$session.txt"
 askg="/dev/shm/askg_$session.txt"
 subg="/dev/shm/subg_$session.srt"
+
 input=""
 output=""
 tmp=""
@@ -57,6 +56,7 @@ then
 				
 				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
 
+                local start=$SECONDS;
 
 				local input="$1";
 
@@ -70,19 +70,23 @@ then
 					echo '{{ Bold "[+] Input prompt" }}' | gum format -t template >&2;
 					local input=${input:-$(echo $(gum input --char-limit=4000 --placeholder="Type something here, just ask me!" --width="$(($COLUMNS-5))" --header="I'm an AI use me wisely!" --header.italic --header.border="rounded" --header.foreground="50" ) )};
 				fi
+      
+	            echo $input > $promptg >&2;
 
-                echo $input > $promptg >&2;
-
-                gum spin -s points --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using Docker to interact with sgpt..." --\
+				#-------------------------------------x
+                gum spin -s points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using Docker to interact with sgpt..." --\
                 docker run --rm --env OPENAI_API_KEY -v gpt-cache:/tmp/shell_gpt ghcr.io/ther1d/shell_gpt --no-animation --chat "$session" "$input" > "$textg";
-				
-				local output="";
+
+                echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
+
+				#-------------------------------------x
                 local output=$(cat $textg | tr -d '\n')  >&2;
 
-                if [ -z "$output" ]; then
-                    echo '{{ Bold "Open.ai servers are probably too busy or unreachable, try again for more luck..." }}' | gum format -t template >&2;
+                if [ -z "$output" ];
+                then
+                    echo '{{ Bold "Open.ai servers are probably down or unreachable, try again..." ' | gum format -t template >&2;
                     return 1;
-                fi
+                fi		
 				
 			    gum style "INPUT: saved at $promptg" "$input" "OUTPUT: saved at $textg" "$output" "SESSION: $session" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";
                 gum confirm --negative="no" --affirmative="yes, let's read!" "open pager to read output?" --timeout=15s --selected.foreground="0" --unselected.foreground="44" --selected.italic --unselected.italic --selected.background="50" --prompt.italic --prompt.margin="0 0 0 $(($COLUMNS -29))" \
@@ -95,8 +99,8 @@ then
 								
 				CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "edit output text in glow" "edit input text in glow" "help" "contribute to aiyu");
 				[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="p2t" --height=9);
-				[[ "$CHOICE" == "edit output text in glow" ]] && cp $textg "${textw::-4}.md" && glow "/dev/shm/";
-				[[ "$CHOICE" == "edit input text in glow" ]] && cp $textg "${textg::-4}.md" && glow "/dev/shm/";
+				[[ "$CHOICE" == "edit output text in glow" ]] && cp $textg "${textg::-4}.md" && glow "/dev/shm/";
+				[[ "$CHOICE" == "edit input text in glow" ]] && cp $promptg "${promptg::-4}.md" && glow "/dev/shm/";
 				[[ "$CHOICE" == "help" ]] && glow -p README.md;
 				[[ "$CHOICE" == "contribute to aiyu" ]] && echo "Great! I thought so, thank you for making $(gum style --bold "aiyu") is the best! leave a $(gum style --bold "star") if you like this. Go to: https://github.com/GabrieleRisso/aiyu";
 				

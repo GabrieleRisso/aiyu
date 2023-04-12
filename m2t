@@ -2,30 +2,67 @@
 # Use it at your own risk!
 # Author: Gabriele Risso  License: Apache 2.0
 
-
 lang=${lang:-$(echo ${LANG:0:2})};
 
-session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};	
+session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
 
 
 textw="/dev/shm/textw_$session.txt"
 audiow="/dev/shm/audiow_$session.mp3"
-voicew="/dev/shm/voicew_$session.mp3"
-subw="/dev/shm/subw_$session.srt"
-
-voiceg="/dev/shm/voiceg_$session.mp3"
-audiog="/dev/shm/audiog_$session.mp3"
-subg="/dev/shm/subg_$session.srt"
-
 
 input=""
 output=""
 
-
-if ! type a2t 2>/dev/null 1>&2;
+if ! type m2a 2>/dev/null 1>&2;
 then
-    a2t ()
+    m2t ()
 	{
+	    if ! python3 -c "import pvrecorder" 2>/dev/null 1>&2;
+		then
+            echo "PV_Recorder is not installed on your system. Install it: pip3 install pvrecorder and re-try" >&2;
+            echo "m2a-pvrecorder is disabled" >&2;
+		elif ! command -v gum --version 2>/dev/null 1>&2;
+	    then
+            echo " gum is not installed on your system. Install it: https://github.com/charmbracelet/gum#installation and re-try" >&2;
+        else
+		    if ! type m2a-pvrecorder 2>/dev/null 1>&2;
+            then
+		        m2a-pvrecorder ()
+                {
+
+				echo '{{ Bold "[*] session: '$session' " }}' | gum format -t template >&2;
+
+                #set -uo pipefail;
+
+			    echo '{{ Bold "[!] record started" }}' | gum format -t template >&2;
+
+                local start=$SECONDS;
+
+				#local output="$1";
+                local output=${output:-$(echo $audiow)};
+
+                gum style "using microphone for audio recording." "INPUT: microphone" "OUTPUT: audio saved at $output" "DEVICE: default mic" "SESSION: $session" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";
+								
+	            # subtitle to text: https://github.com/Picovoice/pvrecorder/tree/main/sdk/python
+
+				wget -qO - https://raw.githubusercontent.com/Picovoice/pvrecorder/main/sdk/python/demo.py > /dev/shm/recorder.py
+   			    echo '{{ Bold "[+] Recording has started! stop it with CTRL+C" }}' | gum format -t template >&2;
+				
+                
+                gum spin -s points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "recording with default mic..." --\
+                python3 /dev/shm/recorder.py --output_path $output;
+
+                echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
+			    echo '{{ Bold "[+] recorder OK" }}' | gum format -t template >&2;
+
+				echo ' ' >&2;
+
+		        }
+		    else
+                echo '{{ Bold "m2a-pvrecorder is set on the system" }}' | gum format -t template >&2;
+            fi
+        fi
+
         if ! command -v whisper-ctranslate2  2>/dev/null 1>&2;
 		then
             echo "whisper-ctranslate2 is not installed on your system.  Install it: pip install -U whisper-ctranslate2" >&2;
@@ -40,8 +77,6 @@ then
 		        a2t-whisp ()
                 {
 
-				echo '{{ Bold "[*] session: '$session' " }}' | gum format -t template >&2;
-
                 echo '{{ Bold "[!] whisper subtitles started" }}' | gum format -t template >&2;
 
 				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
@@ -52,13 +87,13 @@ then
                 local model=${model:-$(echo "medium")};
 				#if input text exis then set it as input, if not select it
 				
-				local input="$1";
+				#local input="$1";
 
 				#select the lastly created file.mp3 (1 minute old) located in /dev/shm/ OR select a local .mp3 file
 				local newest_file="";
   				local newest_file=$(find /dev/shm/ -cmin -1 -type f -name "*.mp3" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
                 if [ -n "$newest_file" ]; then 
-					echo '{{ Bold "[!] most recent file --> '$newest_file'" }}' | gum format -t template >&2;
+					echo '{{ Italic "[!] using most recent recording " }}' | gum format -t template >&2;
 					local input=${input:-$(echo $newest_file)};
 				else 
 					echo '{{ Bold "[+] Select a mp3 file. Use keyboard arrows < > to traverse directories, up or down arrows to move in the directory." }}' | gum format -t template >&2;
@@ -66,7 +101,7 @@ then
 				fi
                 
 				#output definition 
-    			local output="$2";
+    			local output="$1";
                 local output=${output:-$(echo $textw)};
 				#local tmpsrt=$(basename $subw);
 				#local tmptxt=$(basename $output);
@@ -82,37 +117,31 @@ then
 				local namesrt=$(basename $input);
                 mv "/dev/shm/${namesrt%.*}.$formatsub" "$textw";
 
-				# subtitle to text: https://github.com/yumstar/srt2text/blob/main/srt2text.py
-				
-				#cat $subw;
-				#echo "$tmpsrt $tmptxt"; 
-				#wget -qO - https://raw.githubusercontent.com/yumstar/srt2text/main/srt2text.py > /dev/shm/srt2text.py
-				#python /dev/shm/srt2text.py -p -o $tmpsrt -s $tmpsrt;
-
                 gum confirm --negative="no" --affirmative="yes, let's read!" "open pager to read text?" --timeout=15s --selected.foreground="0" --unselected.foreground="44" --selected.italic --unselected.italic --selected.background="50" --prompt.italic --prompt.margin="0 0 0 $(($COLUMNS -29))" \
                 && gum pager --soft-wrap --border-foreground="86" --help.foreground="200" --show-line-numbers < $output;
                 echo '{{ Bold "[+] subtitles OK" }}' | gum format -t template >&2;
 				
-				echo '{{ Bold "[?] What now?  press ESC to exit." }}' | gum format -t template >&2;
+				echo '{{ Bold "[?] what now?  press ESC to exit." }}' | gum format -t template >&2;
 				echo ' ' >&2;
 
-				CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "edit output text in glow" "play input audio" "help" "contribute to aiyu");
-				[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="a2t" --height=9);
+				CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "edit output text in glow" "play recorded audio" "help" "contribute to aiyu");
+				[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="m2t" --height=9);
 				[[ "$CHOICE" == "edit output text in glow" ]] && cp $textw "${textw::-4}.md" && glow "/dev/shm/";
-				[[ "$CHOICE" == "play input audio" ]] && ffplay -nodisp -autoexit -loglevel fatal $input;
+				[[ "$CHOICE" == "play recorded audio" ]] && ffplay -nodisp -autoexit -loglevel fatal $audiow;
 				[[ "$CHOICE" == "help" ]] && glow -p README.md;
 				[[ "$CHOICE" == "contribute to aiyu" ]] && echo "Great! I thought so, thank you for making $(gum style --bold "aiyu") is the best! leave a $(gum style --bold "star") if you like this. Go to: https://github.com/GabrieleRisso/aiyu";
 				
+
 		        }
 
 		    else
-                echo "a2t is set on the system. To use it: a2t \"input.mp3\" \"output.mp3\" " >&2;
+                echo "m2t is set on the system. To use it: m2t \"output.mp3\" " >&2;
             fi
         fi
 
-		a2t-whisp "$1" "$2";
+		m2a-pvrecorder && a2t-whisp "$1";
 
 	}
 else
-    echo '{{ Bold "a2t is set on the system" }}' | gum format -t template >&2;
-fi
+    echo '{{ Bold "m2t is set on the system" }}' | gum format -t template >&2;
+fia

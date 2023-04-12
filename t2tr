@@ -112,6 +112,8 @@ then
 
 				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
 
+                local start=$SECONDS;
+
 				local input="$2";
 
 				local newest_txtfile="";
@@ -147,12 +149,14 @@ then
 				#using https://github.com/soimort/translate-shell 		
 				gum spin --spinner points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using trad for translation generation..." -- sleep 2				
 				docker run --rm -it soimort/translate-shell -shell -brief -w 10 :"$langto" "$intrad" | tail -n +3  > $output;  
-				
+
+
+
+				# prints to terminal
+                echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
 				gum confirm --negative="no" --affirmative="yes, let's read!" "open pager to read translation?" --timeout=15s --selected.foreground="0" --unselected.foreground="44" --selected.italic --unselected.italic --selected.background="50" --prompt.italic --prompt.margin="0 0 0 $(($COLUMNS -29))" \
                 && gum pager --soft-wrap --border-foreground="86" --help.foreground="200" --show-line-numbers < $output; 
-				
 				echo '{{ Bold "[+] translation OK" }}' | gum format -t template >&2;
-				
 				echo '{{ Bold "[?] What now?  press ESC to exit." }}' | gum format -t template >&2;
 				echo ' ' >&2;
 												
