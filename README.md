@@ -1,9 +1,6 @@
 ## Core shell functions for AI 
 
-alfa version
-
-**Open.ai** Gpt-3.5turbo text generation meets **Google** gTTS and **Mozzilla** TTS audio generation. Featuers improved audio quality using ffmpeg RNN noise supression filter and subtitle timestamp accuracy using **Aeneas** forced alignment.
-Fast **Whisper** ctranslate2 transcript generation, Translate-shell text to text translation, **Stable Diffusion** text to image and much more.
+expreimental attempt
 
 <details>
 
@@ -11,14 +8,16 @@ Fast **Whisper** ctranslate2 transcript generation, Translate-shell text to text
 
 ## Inputs and Outputs
 
-```c  -> code
-t  -> text
-a  -> audio
-s  -> subtitle
-tr -> translation
-i  -> image
-v --> video
-sk -> speaker
+```c  -> code     ex: sourcecode of a python program
+p  -> prompt     ex: "how can I escape the matrix?" 
+d  -> document   ex: .pdf file of a research paper
+t  -> text       ex: .txt file of a motivation letter
+s  -> subtitle   ex: .srt file of a movie subtitles
+a  -> audio      ex: .mp3 file of a recorded conference 
+                 I/O: {sk -> speaker, m <- microphone} 
+i  -> image      ex: .jpg file of a kangoroo 
+v --> video      ex: .mp4 file of a instagram reel
+
 ```
 </details>
 
@@ -27,15 +26,19 @@ sk -> speaker
 | t   | `t2t`   | `t2a`   |
 | a   | `a2t`   | `a2a`   |
 
-|    	| c    	| t    	| a    	| s    	|  i 	|  tr 	|
-|----	|------	|------	|------	|------	|------	|---	|
-| c  	| c2c  	| c2t  	| c2a  	|  c2s   	| c2i 	| c2tr 	|
-| t  	| `t2c`  	| `t2t`  	| `t2a`  	| t2s 	| `t2i` 	| `t2tr`  	|
-| a  	| a2c  	| `a2t`  	| `a2a`  	| `a2s`  	| a2i 	|  a2tr 	|
-| s  	|  c2s   	| s2t  	| s2a  	| s2s  	| s2i 	|  s2tr 	|
-| i 	| i2c 	| i2t 	| i2a 	| i2s 	|  `i2i`  	|  i2tr 	|
+### Current state of implemented functions
+x2x are a translation: ex: t2t en (translate text to english), c2c python (translates code to python) 
 
-Current state of implemented functions
+|    	| c    	| p    	| d    	| t    	|  s 	|  a 	|
+|----	|------	|------	|------	|------	|------	|---	|
+| c  	| `c2c`  	|  	|   	|  c2t   	|  	|  	|
+| p  	| `p2c`  	| p2p  	| p2d  	| `p2t` 	| p2s 	| `p2a`  	|
+| d  	|   	|   	| d2d  	| d2t  	|  	|  `d2a` 	|
+| t  	|  `t2c` 	| t2p  	| t2d  	| `t2t` 	| t2s 	|  `t2a` 	|
+| s  	|  	|  	|  	|  	|  `s2s`  	|  s2a 	|
+| a   |    | `a2p`     | a2d  | `a2t`     |  `a2s`  |  `a2a`  |
+
+
 
 ## What is **AIyu**:
 
