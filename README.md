@@ -131,10 +131,7 @@ They are prompted if missing and a link to install them is provided. Functions m
 
 
 
-### contact me for custom implementation: 
-```
-gabriele.risso@protonmail.ch
-```
+
 
 ### Citation
 If you utilize this reposistory please consider citing it with:
@@ -150,7 +147,12 @@ If you utilize this reposistory please consider citing it with:
 }
 ```
 
-
 ### Copyright
 
 Copyright © 2023 Gabriele Risso. 
+
+
+#### Contact for custom implementation: 
+```
+gabriele.risso@protonmail.ch
+```
