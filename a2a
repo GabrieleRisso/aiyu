@@ -2,23 +2,228 @@
 # Use it at your own risk!
 # Author: Gabriele Risso  License: Apache 2.0
 
-lang=${lang:-$(echo ${LANG:0:2})};
+#lang=${lang:-$(echo ${LANG:0:2})};
 
 filter=filter.rnn && wget -qO $filter https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn
 
-session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
+#session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
 
+session="$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')";
 
+audiow="/dev/shm/audiow_$session.mp3"
+voicew="/dev/shm/voicew_$session.mp3"
+textw="/dev/shm/textw_$session.txt"
+tradw="/dev/shm/tradw_$session.txt"
+
+voiceg="/dev/shm/vocieg_$session.mp3"
 audiog="/dev/shm/audiog_$session.mp3"
+textg="/dev/shm/textg_$session.txt"
+tradg="/dev/shm/tradg_$session.txt"
 
-input=""
-output=""
+
+
+#a2a $lang = a2a a2a $lang t2a;
+
+#trap "echo; exit" INT
 
 if ! type a2a 2>/dev/null 1>&2;
 then
     a2a ()
 	{
-	if ! command -v ffmpeg --version 2>/dev/null 1>&2;
+
+        if ! command -v whisper-ctranslate2  2>/dev/null 1>&2;
+		then
+            echo "whisper-ctranslate2 is not installed on your system.  Install it: pip install -U whisper-ctranslate2" >&2;
+			echo "if it's your first time whisper is going to install a medium sized model (2.85 GB)"
+            echo "a2a is disabled" >&2;
+		elif ! command -v gum --version 2>/dev/null 1>&2;
+	    then
+            echo " gum is not installed on your system. Install it: https://github.com/charmbracelet/gum#installation and re-try" >&2;
+        else
+		    if ! type a2a-whisp 2>/dev/null 1>&2;
+            then						
+		        a2a-whisp ()
+                {
+
+				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
+
+				echo '{{ Bold "[*] session: '$session' " }}' | gum format -t template >&2;
+                echo '{{ Bold "[!] whisper subtitles started" }}' | gum format -t template >&2;
+
+                local start=$SECONDS;
+                local formatsub=${formatsub:-$(echo "txt")};
+                local model=${model:-$(echo "medium")};
+				#if input text exis then set it as input, if not select it
+				local input="$1";
+
+				#select the lastly created file.mp3 (1 minute old) located in /dev/shm/ OR select a local .mp3 file
+				local newest_file="";
+  				newest_file=$(find /dev/shm/ -type f -cmin -1 -size +0 -regextype sed -regex ".*\(a\|v\)*.mp3" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
+                if [ -n "$newest_file" ]; then 
+					echo '{{ Bold "[!] most recent file --> '$newest_file'" }}' | gum format -t template >&2;
+					input=${input:-$(echo $newest_file)};
+				else 
+					echo '{{ Bold "[+] Select a mp3 file. Use keyboard arrows < > to traverse directories, up or down arrows to move in the directory." }}' | gum format -t template >&2;
+					input=${input:-$(echo $(gum file $PWD) ) };
+				fi
+                
+				cp -f $input $audiow 2>/dev/null;
+
+				#output definition 
+    			local output="";
+                local output=${output:-$(echo $textw)};
+				#local tmpsrt=$(basename $subw);
+				#local tmptxt=$(basename $output);
+			
+			    gum style "INPUT audio located at: $input" "INput audio language: auto" "OUTPUT text saved at $output" "OUTput language: auto" "SESSION: $session" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";
+
+                gum spin -s points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using Whisper for text creation... this can take a short while" --\
+                whisper-ctranslate2 $input --output_format $formatsub --task transcribe --compute_type int8 --output_dir /dev/shm/ ;
+                #choose best model
+                echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
+
+				#rename subtitle file to the output name
+				local namesrt="";
+				namesrt=$(basename $input);
+                mv -f "/dev/shm/${namesrt%.*}.$formatsub" "$textw" 2>/dev/null;
+
+
+				# subtitle to text: https://github.com/yumstar/sra2aext/blob/main/sra2aext.py
+
+				#context
+                #gum confirm --negative="no" --affirmative="yes, let's read!" "open pager to read text?" --timeout=15s --selected.foreground="0" --unselected.foreground="44" --selected.italic --unselected.italic --selected.background="50" --prompt.italic --prompt.margin="0 0 0 $(($COLUMNS -29))" \
+                #&& gum pager --soft-wrap --border-foreground="86" --help.foreground="200" --show-line-numbers < $output;
+                echo '{{ Bold "[+] text OK" }}' | gum format -t template >&2;
+				
+		        }
+
+		    else
+                echo "a2a-whisp is set on the system. To use it: a2a \"input.mp3\" \"output.mp3\" " >&2;
+            fi
+        fi
+
+		if ! command -v docker --version 2>/dev/null 1>&2;
+		then
+            echo "trad is not installed on your system. https://github.com/soimort/translate-shell " >&2;
+            echo "a2a-ttrans is disabled" >&2;
+		elif ! command -v gum --version 2>/dev/null 1>&2;
+	    then
+            echo " gum is not installed on your system. Install it: https://github.com/charmbracelet/gum#installation and re-try" >&2;
+        else
+		    if ! type a2a-ttrans 2>/dev/null 1>&2;
+            then
+		        a2a-ttrans ()
+                {
+				
+				echo '{{ Bold "[!] traduction started" }}' | gum format -t template >&2;
+
+				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
+
+                local start=$SECONDS;
+				local input="";
+				
+				local newest_file="";
+  				newest_file=$(find /dev/shm/ -type f -cmin -1 -size +0 -regextype sed -regex ".*\(t\|s\)*.\(txt\|srt\)" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
+                if [ -n "$newest_file" ]; then 
+					echo '{{ Bold "[!] most recent text file --> '$newest_file'" }}' | gum format -t template >&2;
+					input=${input:-$(echo $newest_file)};
+				else 
+					echo '{{ Bold "[+] Input prompt" }}' | gum format -t template >&2;
+					input=${input:-$(echo $textw) };
+				fi
+				
+				local output="$tradg"; 
+				
+				local langto="$1";
+                local langto=${langto:-$(echo "en")};
+				local langfrom=${langfrom:-$(echo "auto")}; #sould autodetect language
+			
+				gum style  "input text: $input" "language from: $langfrom" "output: $output" "language to: $langto" "SESSION: $session" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";
+
+				local intrad="";
+				intrad=$(<"$input");
+				echo $intrad >| $textg 2>/dev/null; 
+
+				#------------------------------------------------------------#
+				#using https://github.com/soimort/translate-shell 		
+				gum spin --spinner points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using trad for translation generation..." -- sleep 2				
+				docker run --rm -it soimort/translate-shell -shell -brief -w 10 :"$langto" "$intrad" | tail -n +3  > $output;  
+				#------------------------------------------------------------#
+
+				# prints to terminal
+                echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
+
+				#gum confirm --negative="no" --affirmative="yes, let's read!" "open pager to read translation?" --timeout=15s --selected.foreground="0" --unselected.foreground="44" --selected.italic --unselected.italic --selected.background="50" --prompt.italic --prompt.margin="0 0 0 $(($COLUMNS -29))" \
+                #&& gum pager --soft-wrap --border-foreground="86" --help.foreground="200" --show-line-numbers < $output; 
+				
+				echo '{{ Bold "[+] translation OK" }}' | gum format -t template >&2;
+
+		        }
+		    else
+            echo "a2a-ttrans is set on the system.To use it: \"a2a-ttrans lang file.txt \" " >&2;
+            fi
+        fi
+
+		if ! command -v gtts-cli --version 2>/dev/null 1>&2;
+		then
+            echo '{{  Bold "gtts-cli is not intalled on your system, please install it and re-try" }}' | gum format -t template >&2;
+            echo "a2a-gtts is disabled" >&2;
+        else
+		    if ! type a2a-gtts 2>/dev/null 1>&2;
+            then
+		        a2a-gtts ()
+                {
+
+			    echo '{{ Bold "[!] gtts started" }}' | gum format -t template >&2;
+
+                local start=$SECONDS;
+
+                #local input="";
+                #[ -f $textg ] && input=${input:-$(echo $textg)} || input=${input:-$(echo $(gum file $PWD))};
+				local input="";
+
+				#select the lastly created file.mp3 (1 minute old) located in /dev/shm/ OR select a local .mp3 file
+				local newest_file="";
+  				newest_file=$(find /dev/shm/ -type f -cmin -1 -size +0 -regextype sed -regex ".*\(t\|s\)*.txt" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
+                if [ -n "$newest_file" ]; then 
+					echo '{{ Bold "[>] Selecting most recent text file --> '$newest_file'" }}' | gum format -t template >&2;
+					input=${input:-$(echo $newest_file)};
+				else 
+					echo '{{ Bold "[+] Select a .txt file. Use keyboard arrows < > to traverse directories, up or down arrows to move in the directory." }}' | gum format -t template >&2;
+					input=${input:-$(echo $(gum file $PWD))}; 
+				fi
+
+                local output="";
+     			output="$voiceg";
+
+
+				#https://gtts.readthedocs.io/en/latest/module.html#localized-accents
+				local langto="$1";
+             	langto=${langto:-$(echo "en")};
+
+                if [ -z "$input" ];
+                then
+                    echo "No input" >&2;
+                    return 1;
+                fi
+				
+                #desc
+         	    gum style "using gtts for voice generation." "INPUT: saved at $input" "OUTPUT: audio saved at $voiceg" "SESSION: $session" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";                
+
+                #spinner + gtts command
+                gum spin -s points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using gtts to transform text to audio..." --\
+                gtts-cli -f $input --lang $langto --output $output;
+
+                echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
+			    echo '{{ Bold "[+] gtts OK" }}' | gum format -t template >&2;
+
+		        }
+		    else
+                echo '{{ Bold "a2a-gtts is set on the system" }}' | gum format -t template >&2;
+            fi
+        fi
+
+		if ! command -v ffmpeg --version 2>/dev/null 1>&2;
 		then
             echo "ffmpeg is not installed on your system.  Install it and re-try" >&2;
             echo "a2a-ffmpeg is disabled" >&2;
@@ -31,29 +236,28 @@ then
 		        a2a-ffmpeg ()
                 {
 
-                set -euo pipefail;
+				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
 
 			    echo '{{ Bold "[!] ffmpeg started" }}' | gum format -t template >&2;
 
-				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
-
                 local start=$SECONDS;
-
-				local input="$1";
+				local input="";
 
 				#select the lastly created file.mp3 (1 minute old) located in /dev/shm/ OR select a local .mp3 file
 				local newest_file="";
-  				local newest_file=$(find /dev/shm/ -cmin -1 -type f -name "*.mp3" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
+  				newest_file=$(find /dev/shm/ -type f -cmin -1 -size +0 -regextype sed -regex ".*\(a\|v\)*.mp3" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
                 if [ -n "$newest_file" ]; then 
 					echo '{{ Bold "[>] Selecting most recent audio file --> '$newest_file'" }}' | gum format -t template >&2;
-					local input=${input:-$(echo $newest_file)};
+					input=${input:-$(echo $newest_file)};
 				else 
 					echo '{{ Bold "[+] Select a mp3 file. Use keyboard arrows < > to traverse directories, up or down arrows to move in the directory." }}' | gum format -t template >&2;
-					local input=$(gum file $PWD); 
+					input=${input:-$(echo $(gum file $PWD) )}; 
 				fi
 
-				local output="$2";
-                local output=${output:-$(echo $audiog)};
+				echo $input >| $audiog 2>/dev/null;
+
+				local output="";
+                output=${output:-$(echo $audiog)};
 
                 gum style "using ffmpeg for audio tune and output creation." "INPUT: audio saved at $input" "OUTPUT: audio saved at $output" "FILTER: audiog filter at $filter" "SESSION: $session" "SPEED: 1.4" "VOLUME: 1.3" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";
 								
@@ -61,24 +265,40 @@ then
 
                 echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
 			    echo '{{ Bold "[+] ffmpeg OK" }}' | gum format -t template >&2;
-
-				echo '{{ Bold "[?] What now?  press ESC to exit." }}' | gum format -t template >&2;
 				echo ' ' >&2;
-				CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "play input audio" "play output audio" "help" "contribute to aiyu");
-				[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="a2t" --height=9);
-				[[ "$CHOICE" == "play input audio" ]] && ffplay -nodisp -autoexit -loglevel fatal $input;
-				[[ "$CHOICE" == "play output audio" ]] && ffplay -nodisp -autoexit -loglevel fatal $output;
-				[[ "$CHOICE" == "help" ]] && glow -p README.md;
-				[[ "$CHOICE" == "contribute to aiyu" ]] && echo "Great! I thought so, thank you for making $(gum style --bold "aiyu") the best! leave a $(gum style --bold "star") if you like this. Go to: https://github.com/GabrieleRisso/aiyu";		
-				
+				echo '{{ Bold "[>] DONE! ENTER for more options." }}' | gum format -t template >&2;
+				echo '{{ Bold "[?] press ESC to exit." }}' | gum format -t template >&2;
+
+				while read -r -n1 key
+				do
+					# if input == ESC key
+    				if [[ $key == $'\e' ]];
+    				then
+    				break;
+    				fi
+
+					#printf '\n'>&2;
+					CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "play input audio" "play output audio" "help" "contribute to aiyu");
+					[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="a2a" --height=9);
+					[[ "$CHOICE" == "play input audio" ]] && ffplay -nodisp -autoexit -loglevel fatal $audiow;
+					[[ "$CHOICE" == "play output audio" ]] && ffplay -nodisp -autoexit -loglevel fatal $output;
+					[[ "$CHOICE" == "edit output translation in glow" ]] && cp $tradg "${tradg::-4}.md" && glow "/dev/shm/";
+					[[ "$CHOICE" == "edit input text in glow" ]] && cp $textw "${textw::-4}.md" && glow "/dev/shm/";
+					[[ "$CHOICE" == "help" ]] && glow -p README.md;
+					[[ "$CHOICE" == "contribute to aiyu" ]] && echo "Great! I thought so, thank you for making $(gum style --bold "aiyu") the best! leave a $(gum style --bold "star") if you like this. Go to: https://github.com/GabrieleRisso/aiyu";		
+ 					#printf '\n' >&2;
+
+				done;
+
 		        }
 		    else
                 echo '{{ Bold "a2a-ffmpeg is set on the system" }}' | gum format -t template >&2;
             fi
         fi		
 		
-		a2a-ffmpeg "$1" "$2";
+		a2a-whisp "$2" && a2a-ttrans "$1" && a2a-gtts "$1" && a2a-ffmpeg;
 	}
 else
     echo '{{ Bold "a2a is set on the system" }}' | gum format -t template >&2;
 fi
+

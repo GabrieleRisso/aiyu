@@ -1,0 +1,99 @@
+# Small but handy functions. For Personal use only.
+# Use it at your own risk!
+# Author: Gabriele Risso  License: Apache 2.0
+
+lang=${lang:-$(echo ${LANG:0:2})};
+
+session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
+
+
+
+
+
+#promptw="/dev/shm/promptw_$session.txt"
+#promptg="/dev/shm/promptg_$session.txt"
+
+
+#textg="/dev/shm/textg_$session.txt"
+codeg="/dev/shm/codeg_$session"
+
+input=""
+output=""
+tmp=""
+
+if ! type c2c 2>/dev/null 1>&2;
+then
+    c2c ()  
+    {	
+	    if ! command -v npm --version 2>/dev/null 1>&2;
+	    then
+            echo " npm is not installed on your system. Install it: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm and re-try" >&2;
+            echo "  c2c is disabled" >&2;
+        elif ! command -v gum --version 2>/dev/null 1>&2;
+	    then
+            echo " gum is not installed on your system. Install it: https://github.com/charmbracelet/gum#installation and re-try" >&2;
+        else
+		    if ! type c2c-codetrans 2>/dev/null 1>&2;
+            then
+				
+				#echo '{{ Bold "[*] language: '$lang' " }}' | gum format -t template >&2;
+				echo '{{ Bold "[*] session: '$session' " }}' | gum format -t template >&2;
+
+		        c2c-codetrans ()
+                {
+					
+				echo '{{ Bold "[!] c2c-codetrans started" }}' | gum format -t template >&2;
+				
+				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
+
+                local start=$SECONDS;
+
+    			echo '{{ Bold "[+] copy-paste your openai api key:'$OPENAI_API_KEY' " }}' | gum format -t template >&2;
+
+
+				#-------------------------------------x
+                gum spin -s points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using Git to install code translator web interface..." --\
+                git clone https://github.com/mckaywrigley/ai-code-translator.git; cd ai-code-translator/ && npm i;
+                
+                echo '{{ Bold "[t] open your browser at the below address: startup done in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
+                
+                #run web interface
+				echo '{{ Bold "[+] copy-paste your traduction to : '$codeg' " }}' | gum format -t template >&2;
+				
+				echo '{{ Bold "[?] press CTRL-C to exit." }}' | gum format -t template >&2;
+				echo ' ' >&2;
+
+                npm run dev &
+
+                open http://localhost:3000;
+
+                #porobably we can inject code and parameters can be auto detected like t2tr --> c2tr. only needed params is c2tr $langto, like in t2tr fr ( translate text in french)
+				#-------------------------------------x
+                
+                while read -r -n1 key
+                do
+                # if input == ESC key
+                if [[ $key == $'\e' ]];
+                then
+                break;
+                fi
+								
+				CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "edit output text in glow" "edit input text in glow" "help" "contribute to aiyu");
+				[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="c2c"code-to-codeeight=9);
+				[[ "$CHOICE" == "help" ]] && glow -p README.md;
+				[[ "$CHOICE" == "contribute to aiyu" ]] && echo "Great! I thought so, thank you for making $(gum style --bold "aiyu") is the best! leave a $(gum style --bold "star") if you like this. Go to: https://github.com/GabrieleRisso/aiyu";
+				
+                done;
+
+                }
+		    else
+                echo '{{ Bold " c2c-codetrans is set on the system." }}' | gum format -t template >&2;
+            fi
+        fi
+
+		c2c-codetrans;
+	}
+else
+    echo '{{ Bold "c2c installed on the system" }}' | gum format -t template >&2;
+fi
+

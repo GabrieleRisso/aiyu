@@ -3,23 +3,13 @@
 # Author: Gabriele Risso  License: Apache 2.0
 
 
-lang=${lang:-$(echo ${LANG:0:2})};
+#lang=${lang:-$(echo ${LANG:0:2})};
 
 session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};	
 
 
 textw="/dev/shm/textw_$session.txt"
 audiow="/dev/shm/audiow_$session.mp3"
-voicew="/dev/shm/voicew_$session.mp3"
-subw="/dev/shm/subw_$session.srt"
-
-voiceg="/dev/shm/voiceg_$session.mp3"
-audiog="/dev/shm/audiog_$session.mp3"
-subg="/dev/shm/subg_$session.srt"
-
-
-input=""
-output=""
 
 
 if ! type a2t 2>/dev/null 1>&2;
@@ -40,31 +30,30 @@ then
 		        a2t-whisp ()
                 {
 
-				echo '{{ Bold "[*] session: '$session' " }}' | gum format -t template >&2;
-
-                echo '{{ Bold "[!] whisper subtitles started" }}' | gum format -t template >&2;
-
 				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
 
-                local start=$SECONDS;
+				echo '{{ Bold "[*] session: '$session' " }}' | gum format -t template >&2;
+                echo '{{ Bold "[!] whisper subtitles started" }}' | gum format -t template >&2;
 
+                local start=$SECONDS;
                 local formatsub=${formatsub:-$(echo "txt")};
                 local model=${model:-$(echo "medium")};
 				#if input text exis then set it as input, if not select it
-				
 				local input="$1";
 
 				#select the lastly created file.mp3 (1 minute old) located in /dev/shm/ OR select a local .mp3 file
 				local newest_file="";
-  				local newest_file=$(find /dev/shm/ -cmin -1 -type f -name "*.mp3" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
+  				newest_file=$(find /dev/shm/ -type f -cmin -1 -size +0 -regextype sed -regex ".*\(a\|v\)*.mp3" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
                 if [ -n "$newest_file" ]; then 
 					echo '{{ Bold "[!] most recent file --> '$newest_file'" }}' | gum format -t template >&2;
-					local input=${input:-$(echo $newest_file)};
+					input=${input:-$(echo $newest_file)};
 				else 
 					echo '{{ Bold "[+] Select a mp3 file. Use keyboard arrows < > to traverse directories, up or down arrows to move in the directory." }}' | gum format -t template >&2;
-					local input=$(gum file $PWD); 
+					input=$(gum file $PWD); 
 				fi
                 
+				cp $input $audiow;
+
 				#output definition 
     			local output="$2";
                 local output=${output:-$(echo $textw)};
@@ -79,16 +68,13 @@ then
                 echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
 
 				#rename subtitle file to the output name
-				local namesrt=$(basename $input);
+				local namesrt="";
+				namesrt=$(basename $input);
                 mv "/dev/shm/${namesrt%.*}.$formatsub" "$textw";
 
 				# subtitle to text: https://github.com/yumstar/srt2text/blob/main/srt2text.py
-				
-				#cat $subw;
-				#echo "$tmpsrt $tmptxt"; 
-				#wget -qO - https://raw.githubusercontent.com/yumstar/srt2text/main/srt2text.py > /dev/shm/srt2text.py
-				#python /dev/shm/srt2text.py -p -o $tmpsrt -s $tmpsrt;
 
+				#context
                 gum confirm --negative="no" --affirmative="yes, let's read!" "open pager to read text?" --timeout=15s --selected.foreground="0" --unselected.foreground="44" --selected.italic --unselected.italic --selected.background="50" --prompt.italic --prompt.margin="0 0 0 $(($COLUMNS -29))" \
                 && gum pager --soft-wrap --border-foreground="86" --help.foreground="200" --show-line-numbers < $output;
                 echo '{{ Bold "[+] subtitles OK" }}' | gum format -t template >&2;
@@ -96,13 +82,23 @@ then
 				echo '{{ Bold "[?] What now?  press ESC to exit." }}' | gum format -t template >&2;
 				echo ' ' >&2;
 
-				CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "edit output text in glow" "play input audio" "help" "contribute to aiyu");
-				[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="a2t" --height=9);
-				[[ "$CHOICE" == "edit output text in glow" ]] && cp $textw "${textw::-4}.md" && glow "/dev/shm/";
-				[[ "$CHOICE" == "play input audio" ]] && ffplay -nodisp -autoexit -loglevel fatal $input;
-				[[ "$CHOICE" == "help" ]] && glow -p README.md;
-				[[ "$CHOICE" == "contribute to aiyu" ]] && echo "Great! I thought so, thank you for making $(gum style --bold "aiyu") is the best! leave a $(gum style --bold "star") if you like this. Go to: https://github.com/GabrieleRisso/aiyu";
+				while read -r -n1 key
+				do
+					# if input == ESC key
+    				if [[ $key == $'\e' ]];
+    				then
+    				break;
+    				fi
 				
+					CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "edit output text in glow" "play input audio" "help" "contribute to aiyu");
+					[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="a2t" --height=9);
+					[[ "$CHOICE" == "edit output text in glow" ]] && cp $textw "${textw::-4}.md" && glow "/dev/shm/";
+					[[ "$CHOICE" == "play input audio" ]] && ffplay -nodisp -autoexit -loglevel fatal $input;
+					[[ "$CHOICE" == "help" ]] && glow -p README.md;
+					[[ "$CHOICE" == "contribute to aiyu" ]] && echo "Great! I thought so, thank you for making $(gum style --bold "aiyu") is the best! leave a $(gum style --bold "star") if you like this. Go to: https://github.com/GabrieleRisso/aiyu";
+				
+				done;
+
 		        }
 
 		    else

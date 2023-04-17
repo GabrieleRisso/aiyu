@@ -1,0 +1,109 @@
+
+# Small but handy functions. For Personal use only.
+# Use it at your own risk!
+# Author: Gabriele Risso  License: Apache 2.0
+
+#lang=${lang:-$(echo ${LANG:0:2})};
+session=${session:-$(echo "$(wget -qO - http://frightanic.com/goodies_content/docker-names.php)-$(date '+%Y-%m-%d-%H')" )};
+
+subg="/dev/shm/subg_$session.txt"
+#textg="/dev/shm/textg_$session.txt"
+tradg="/dev/shm/tradg_$session.txt"
+
+
+if ! type s2s 2>/dev/null 1>&2;
+then
+    s2s ()
+	{
+
+		if ! command -v docker --version 2>/dev/null 1>&2;
+		then
+            echo "trad is not installed on your system. https://github.com/soimort/translate-shell " >&2;
+            echo "s2s-ttrans is disabled" >&2;
+		elif ! command -v gum --version 2>/dev/null 1>&2;
+	    then
+            echo " gum is not installed on your system. Install it: https://github.com/charmbracelet/gum#installation and re-try" >&2;
+        else
+		    if ! type s2s-ttrans 2>/dev/null 1>&2;
+            then
+		        s2s-ttrans ()
+                {
+
+				if [ -z ${OPENAI_API_KEY+x} ]; then echo '{{ Bold "[!] OPENAI_API_KEY not set! type: export OPENAI_API_KEY=\"your-key-here\" " }}' | gum format -t template >&2; return 1; fi
+				
+				echo '{{ Bold "[!] traduction started" }}' | gum format -t template >&2;
+
+                local start=$SECONDS;
+				local input="$2";
+
+				local newest_file="";
+  				newest_file=$(find /dev/shm/ -type f -cmin -1 -size +0 -regextype sed -regex ".*\(t\|s\)*.\(txt\|srt\)" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}');
+                if [ -n "$newest_file" ]; then 
+					echo '{{ Bold "[!] most recent subtitle file --> '$newest_file'" }}' | gum format -t template >&2;
+					local input=${input:-$(echo $newest_file)};
+				else 
+					echo '{{ Bold "[+] Input prompt" }}' | gum format -t template >&2;
+					local input=${input:-$(echo $(gum input --char-limit=4000 --placeholder="Type something here, just ask me!" --width="$(($COLUMNS-5))" ) )};
+				fi
+				
+				local output="$tradg"; 
+				
+				local langto="$1";
+                local langto=${langto:-$(echo "en")};
+				local langfrom=${langfrom:-$(echo "auto")}; #sould autodetect language
+			
+				gum style  "input subtitle: $input" "language from: $langfrom" "output: $output" "language to: $langto" "SESSION: $session" --foreground 15 --border-foreground 50 --border rounded --width="$(($COLUMNS -4))" --italic --margin "1 1" --padding "0 1";
+
+				local intrad="";
+				intrad=$(<"$input");
+				echo $intrad > $subg >&2; 
+
+				#------------------------------------------------------------#
+				#using https://github.com/soimort/translate-shell 		
+				gum spin --spinner points --show-output --spinner.foreground="50" --title.bold --spinner.margin="0 1" --title "using trad for translation generation..." -- sleep 2				
+				docker run --rm -it soimort/translate-shell -shell -brief -w 10 :"$langto" "$intrad" | tail -n +3  > $output;  
+				#------------------------------------------------------------#
+
+				# prints to terminal
+                echo '{{ Bold "[t] completed in '$((SECONDS-start))' seconds" }}' | gum format -t template >&2;
+
+				gum confirm --negative="no" --affirmative="yes, let's read!" "open pager to read translation?" --timeout=15s --selected.foreground="0" --unselected.foreground="44" --selected.italic --unselected.italic --selected.background="50" --prompt.italic --prompt.margin="0 0 0 $(($COLUMNS -29))" \
+                && gum pager --soft-wrap --border-foreground="86" --help.foreground="200" --show-line-numbers < $output; 
+				
+				echo '{{ Bold "[+] translation OK" }}' | gum format -t template >&2;
+				echo '{{ Bold "[?] What now?  press ESC to exit." }}' | gum format -t template >&2;
+				echo ' ' >&2;
+
+
+				while read -r -n1 key
+				do
+					# if input == ESC key
+    				if [[ $key == $'\e' ]];
+    				then
+    				break;
+    				fi
+				
+					CHOICE=$(gum choose --item.foreground 250 "edit function sourcecode" "edit output translation in glow" "edit input subtitle in glow" "help" "contribute to aiyu");
+					[[ "$CHOICE" == "edit function sourcecode" ]] && $EDITOR $(gum filter --value="s2s" --height=18);
+					[[ "$CHOICE" == "edit output translation in glow" ]] && cp $tradg "${tradg::-4}.md" && glow "/dev/shm/";
+					[[ "$CHOICE" == "edit input subtitle in glow" ]] && cp $input "${input::-4}.md" && glow "/dev/shm/";
+					[[ "$CHOICE" == "help" ]] && glow -p README.md;
+					[[ "$CHOICE" == "contribute to aiyu" ]] && echo "Great! I thought so, thank you for making $(gum style --bold "aiyu") is the best! leave a $(gum style --bold "star") if you like this. Go to: https://github.com/GabrieleRisso/aiyu";
+				
+				done;
+
+		        }
+		    else
+            echo "s2s-ttrans is set on the system.To use it: \"s2s-ttrans lang file.txt \" " >&2;
+            fi
+        fi
+
+		s2s-ttrans "$1" "$2";
+		#s2s-dtrans "$1" "$2";
+	}
+else
+    echo '{{ Bold "s2s is set on the system" }}' | gum format -t template >&2;
+fi
+
+
+
