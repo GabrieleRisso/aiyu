@@ -21,7 +21,7 @@ m2a; a2p; p2a; a2a it
 Listen to your microphone and outputs an audio file (m2a), then use the created audio and transcribes it to textual prompt (a2p), use the prompt to query GPT3.5-turbo and produce an audio of the answare (p2a) and lastly, use the created audio and translate it to Italian (a2a it).
 
 
-## Current state of implemented functions
+
 
 <details>
 
@@ -29,30 +29,25 @@ Listen to your microphone and outputs an audio file (m2a), then use the created 
 
 ## Inputs and Outputs
 
-```c  -> code     ex: sourcecode of a python program
+```
+c  -> code     ex: sourcecode of a python program
 p  -> prompt     ex: "how can I escape the matrix?" 
-d  -> document   ex: .pdf file of a research paper
 t  -> text       ex: .txt file of a motivation letter
 s  -> subtitle   ex: .srt file of a movie subtitles
 a  -> audio      ex: .mp3 file of a recorded conference 
                  I/O: {sk -> speaker, m <- microphone} 
-i  -> image      ex: .jpg file of a kangoroo 
-v --> video      ex: .mp4 file of a instagram reel
-
 ```
 </details>
 
-
 ### Current state of implemented functions
 
-|    	| c    	| p    	| d    	| t    	|  s 	|  a 	|
-|----	|------	|------	|------	|------	|------	|---	|
-| c  	| `c2c`	|  	|   	| c2t |  	|  	|
-| p  	| `p2c`	| p2p | p2d  	| `p2t` 	| p2s 	| `p2a`  	|
-| d  	|   	|   	| d2d	| d2t	|  	| d2a |
-| t  	|  `t2c` | t2p  | t2d  	| `t2t` | t2s | `t2a`	|
-| s  	|  	|  	|  	|  	|  `s2s`  	|  s2a 	|
-| a   |    | `a2p` | a2d  | `a2t` | `a2s`  |  `a2a`  |
+|    	      | prompt   	| text | subtitle	| audio |  code 	|
+|-----------|-----------|------|----------|-------|---------|
+| prompt  	| `p2p`	| `p2t` 	|  `ap2s` *	| `p2a` | `p2c` 	|
+| text  	  | t2p	| `t2t` | `at2s` * | `t2a` 	| `p2c` | 
+| subtitle 	| - | `s2t`	| `s2s`	| `s2a`	| -	|
+| audio   	|  `a2p` | `a2t`  | `a2s`	| `a2a` | a2c |
+| code 	    |  - | - | - | - |  `c2c` 	|
 
 
 ## Features:
