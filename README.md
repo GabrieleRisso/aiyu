@@ -129,6 +129,11 @@ They are prompted if missing and a link to install them is provided. Functions m
 
 #### Leave a star if you like this
 
+### contact me for custom implementation: 
+```
+gabriele.risso@protonmail.ch
+```
+
 ### Citation
 If you utilize this reposistory please consider citing it with:
 
