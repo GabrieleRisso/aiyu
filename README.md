@@ -127,7 +127,9 @@ They are prompted if missing and a link to install them is provided. Functions m
  * wiki documentation 
  * suggestions are desired!
 
-#### Leave a star if you like this
+
+
+
 
 ### contact me for custom implementation: 
 ```
