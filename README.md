@@ -1,6 +1,27 @@
 ## Core shell functions for AI 
 
-expreimental attempt
+## What is **AIyu**:
+In essence, the Aiyu Shell pipelines serve as the interweaving adhesive that binds the various AI components together - a technological superglue of sorts!
+
+**Aiyu** allows to build pipelines that easlily leverage the most exciting **ai** technologies using any laptop.
+
+#### example
+
+###### input:  audio in some language; output: audio in French
+```
+m2a; a2a fr; a2sk
+```
+Listen to your microphone and outputs an audio file (m2a), then use the previously created audio and translate it to French (a2a fr) and lastly plays the audio to your speaker (a2sk). 
+
+
+###### input: audio question in some language; output: audio GPT response in Italian
+```
+m2a; a2p; p2a; a2a it 
+```
+Listen to your microphone and outputs an audio file (m2a), then use the created audio and transcribes it to textual prompt (a2p), use the prompt to query GPT3.5-turbo and produce an audio of the answare (p2a) and lastly, use the created audio and translate it to Italian (a2a it).
+
+
+## Current state of implemented functions
 
 <details>
 
@@ -21,28 +42,18 @@ v --> video      ex: .mp4 file of a instagram reel
 ```
 </details>
 
-|     | t text    | a audio |
-|---- |------ |------ |
-| t   | `t2t`   | `t2a`   |
-| a   | `a2t`   | `a2a`   |
 
 ### Current state of implemented functions
-x2x are a translation: ex: t2t en (translate text to english), c2c python (translates code to python) 
 
 |    	| c    	| p    	| d    	| t    	|  s 	|  a 	|
 |----	|------	|------	|------	|------	|------	|---	|
-| c  	| `c2c`  	|  	|   	|  c2t   	|  	|  	|
-| p  	| `p2c`  	| p2p  	| p2d  	| `p2t` 	| p2s 	| `p2a`  	|
-| d  	|   	|   	| d2d  	| d2t  	|  	|  `d2a` 	|
-| t  	|  `t2c` 	| t2p  	| t2d  	| `t2t` 	| t2s 	|  `t2a` 	|
+| c  	| `c2c`	|  	|   	| c2t |  	|  	|
+| p  	| `p2c`	| p2p | p2d  	| `p2t` 	| p2s 	| `p2a`  	|
+| d  	|   	|   	| d2d	| d2t	|  	| d2a |
+| t  	|  `t2c` | t2p  | t2d  	| `t2t` | t2s | `t2a`	|
 | s  	|  	|  	|  	|  	|  `s2s`  	|  s2a 	|
-| a   |    | `a2p`     | a2d  | `a2t`     |  `a2s`  |  `a2a`  |
+| a   |    | `a2p` | a2d  | `a2t` | `a2s`  |  `a2a`  |
 
-
-
-## What is **AIyu**:
-
-In essence, the Aiyu Shell pipelines serve as the interweaving adhesive that binds the various AI components together - a technological superglue of sorts!
 
 ## Features:
 
@@ -86,7 +97,7 @@ cd aiyu/
 ```
 ###### set the key to global scope: 
 ```
-export OPENAI_API_KEY="your key string here"
+. env.list
 ```
 ###### load a function:
 ```
@@ -94,18 +105,9 @@ export OPENAI_API_KEY="your key string here"
 ```
 ###### use it like this:
 ```
-t2a "Who is Lain?"
+t2a "How can I get sponsored by Openai with a github repo?"
 ```
 
-### AIyu pipeline (WIP)
-
-example: suppose **question.mp3** is a file containing a question in english  
-```
-a2t question.mp3 && t2tr it && t2a
-```
-This turns the audio question into English text, translates it in Italian, then ask the question in Italian to gpt3.5 and produce Italian audio answer.
-
-Every function always looks for newly created inputs in /dev/shm/ if not explicitly specified.
 
 ##### Dependencies
 
@@ -126,10 +128,8 @@ They are prompted if missing and a link to install them is provided. Functions m
 
 ### Open for collaboartions; let's make **aiyu** awesome toghter
  
- * .env global
  * per-command tuning
  * wiki documentation 
- * compose functions to make new ones
  * suggestions are desired!
 
 #### Leave a star if you like this
