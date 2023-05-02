@@ -100,7 +100,7 @@ cd aiyu/
 ```
 ###### use it like this:
 ```
-t2a "How can I get sponsored by Openai with a github repo?"
+t2a "How are you ?"
 ```
 
 
